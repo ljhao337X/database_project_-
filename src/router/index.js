@@ -19,6 +19,65 @@ const routes = [
     component: function () {
       return import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
     }
+  },
+  {
+    path: '/login',
+    name: 'login',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: function () {
+      return import(/* webpackChunkName: "about" */ '../views/login.vue')
+    }
+  },
+  {
+    path: '/index',
+    name: 'index',
+    component: function () {
+      return import('../views/index.vue')
+    }
+  },
+  {
+    path: '/register',
+    name: 'register',
+    component: function () {
+      return import('../views/register.vue')
+    }
+  },
+  {
+    path: '/newpost',
+    name: 'newpost',
+    component: function () {
+      return import('../views/newpost.vue')
+    }
+  },
+  {
+    path: '/MyProfile',
+    name: 'MyProfile',
+    component: function (){
+      return import('../views/MyProfile.vue')
+    }
+  },
+  {
+    path: '/detail',
+    name: 'Detail',
+    component: function (){
+      return import('../views/details.vue')
+    }
+  },
+  {
+    path: '/order',
+    name: 'Order',
+    component: function (){
+      return import('../views/order.vue')
+    }
+  },
+  {
+    path: '/admin',
+    name: 'admin',
+    component: function (){
+      return import('../views/admin.vue')
+    }
   }
 ]
 

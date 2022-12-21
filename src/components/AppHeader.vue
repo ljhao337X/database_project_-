@@ -1,0 +1,100 @@
+<template>
+  <div class="header">
+    <div class="app-name">
+      <router-link to="/">北航二手交易平台</router-link>
+    </div>
+    <div class="search-container">
+      <el-input placeholder="我想搜..." v-model="searchStr">
+        <el-button icon="el-icon-search" slot="append" @click="searchItems"></el-button>
+      </el-input>
+    </div>
+    <el-button type="success" @click="postAnItem"><i class="el-icon-plus"></i>发布闲置</el-button>
+<!--    <router-link v-if="!isLogin" class="user-name-text" to="/login">登录</router-link>-->
+<!--    v-else-->
+    <el-dropdown trigger="click">
+      <div style="cursor:pointer;display: flex;align-items: center;">
+        <div style="font-size: 16px;color: #409EFF;padding-right: 5px;">{{nicknameValue?nicknameValue:nickname}}</div>
+        <el-avatar :src="avatarValue?avatarValue:avatar"></el-avatar>
+      </div>
+      <el-dropdown-menu slot="dropdown">
+        <el-dropdown-item><div @click="toProfile">个人中心</div></el-dropdown-item>
+        <el-dropdown-item divided style="color: red;"><div @click="loginOut">退出登录</div></el-dropdown-item>
+      </el-dropdown-menu>
+    </el-dropdown>
+  </div>
+
+</template>
+
+<script>
+
+export default {
+  name: "AppHeader",
+  props: ['searchInput','nicknameValue','avatarValue'],
+  data() {
+    return {
+      searchStr: '',
+      nickname: '游客',
+      avatar: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png',
+      isLogin: false
+    }
+  },
+  methods: {
+    searchItems() {
+      window.alert("wrong input");
+    },
+    postAnItem() {
+      this.$router.push('newpost')
+    },
+    toProfile() {
+
+    },
+    loginOut() {
+
+    }
+  }
+}
+</script>
+
+<style scoped>
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 58px;
+  background: #ffffff;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  border-bottom: #eeeeee solid 2px;
+  z-index: 1000;
+
+}
+
+.header-container {
+  width: 1000px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.app-name a {
+  color: #409EFF;
+  font-size: 24px;
+  text-decoration: none;
+}
+
+.search-container {
+  width: 300px;
+}
+.user-name-text{
+  font-size: 16px;
+  font-weight: 600;
+  color: #409EFF;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+</style>
