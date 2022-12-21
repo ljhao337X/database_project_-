@@ -25,7 +25,7 @@
         {{idle.details}}
       </div>
       <div class="details-picture">
-        <el-image v-for="(imgUrl,i) in idle.imgUrl"
+        <el-image v-for="(imgUrl,i) in idle.picList"
                   style="width: 90%;margin-bottom: 2px;"
                   :src=imgUrl
                   fit="contain"></el-image>
@@ -50,23 +50,75 @@ export default {
   data() { return {
     isMaster:false,
     idle:{
+      id: '1',
       price: '9999',
       name: 'second-hand-phone',
       status: 1,
       details: 'this is amazing',
-      imgUrl : [],
+      picList : [],
       user:{
+        id: '1',
         avatar: '',
         nickname: 'Danny'
       }
     }
   }},
+  created(){
+    let idleId=this.$route.query.idleId;
+    this.$api.getIdle({
+      id:idleId
+    }).then(res=>{
+      console.log(res);
+      if(res.data){
+        let list=res.data.details.split(/\r?\n/);
+        let str='';
+        for(let i=0;i<list.length;i++){
+          str+='<p>'+list[i]+'</p>';
+        }
+        res.data.details=str;
+        res.data.picList=JSON.parse(res.data.pictureList);
+        this.idle=res.data;
+        console.log(this.idle);
+        let userId=this.$globalData.userInfo.id;
+        console.log('userid',userId)
+        if(userId == this.idle.user.id){
+          console.log('isMaster');
+          this.isMaster=true;
+        }
+      }
+      // $('html,body').animate({
+      //   scrollTop: 0
+      // }, {duration: 500, easing: "swing"});
+    });
+  },
   methods: {
     buyButton(idle) {
+      this.$api.addOrder({
+        idleId:idle.id,
+        buyerId: this.$globalData.userInfo.id
+      }).then(res=>{
+        console.log(res);
+        if(res.status_code===1){
+          this.$router.push({path: '/order', query: {id: res.data.orderId}});
+        }else {
+          this.$message.error(res.msg)
+        }
+      }).catch(e=>{
 
+      })
     },
     changeStatus(idle, to) {
-
+      this.$api.updateIdle({
+        id:idle.id,
+        idleStatus:to
+      }).then(res=>{
+        console.log(res);
+        if(res.status_code===1){
+          this.idle.status=to;
+        }else {
+          this.$message.error(res.msg)
+        }
+      });
     }
   }
 }

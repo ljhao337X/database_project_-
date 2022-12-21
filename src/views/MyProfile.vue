@@ -67,6 +67,7 @@
         <el-tabs v-model="activeName" @tab-click="handleClick">
           <el-tab-pane label="我发布的" name="post"></el-tab-pane>
           <el-tab-pane label="我卖出的" name="sold"></el-tab-pane>
+          <el-tab-pane label="已下架的" name="offline"></el-tab-pane>
         </el-tabs>
         <div class="idle-container-list">
           <div v-for="item in idleList" class="idle-container-list-item">
@@ -134,7 +135,7 @@ export default {
         detailAddress: '',
         defaultFlag: false
       },
-      activeName: '1',
+      activeName: '0',
       handleName: ['下架', '删除', '取消收藏', '', ''],
       orderStatus: ['待付款', '待发货', '待收货', '已完成', '已取消'],
       editUserInfoDialogVisible: false,
@@ -146,16 +147,17 @@ export default {
       eidtAddress: false,
       selectedOptions: [],//存放默认值
       user : {
+        id: '',
         nickname: 'Danny',
         studentNumber: '2037924',
         avatar: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png',
+        password: ''
       },
       addressData: [],
       idleList: [{
         imgUrl: null,
         name: 'second-hand phone',
         price: '1100',
-        idlePlace: '20公寓',
         details: 'this is amazing',
         user: {
           avatar:null,
@@ -163,6 +165,22 @@ export default {
         }
       }],
     };
+  },
+  created() {
+    if (!this.$globalData.userInfo.nickname) {
+      this.$api.getUserInfo({
+        id:this.$globalData.userInfo.id
+      }).then(res => {
+        if (res.status_code === 1) {
+          this.$globalData.userInfo = res.data;
+          this.userInfo = this.$globalData.userInfo;
+        }
+      })
+    } else {
+      this.userInfo = this.$globalData.userInfo;
+      console.log(this.userInfo);
+    }
+    this.getMyIdle();
   },
   methods: {
     finishAllEditing() {
@@ -193,7 +211,18 @@ export default {
     },
     handleClick(tab, event) {
 
-    }
+    },
+    getMySoldIdle(){
+      for(let i = 0; i<=2; i++) {
+        this.$api.getMyIdle({id:this.user.id, status: i}).then(res=>{
+          if (res.status_code === 1){
+            console.log('getMySoldIdle',res.data);
+            this.idleList[i] = res.data;
+          }
+        })
+      }
+
+    },
   }
 }
 </script>

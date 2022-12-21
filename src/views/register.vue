@@ -43,7 +43,32 @@ export default {
       this.$router.push('login')
     },
     register() {
-
+      console.log(this.userInfo.nickname);
+      if(this.studentNumber && this.password && this.checkPassword){
+        if(this.password!==this.checkPassword){
+          this.$message.error('两次输入的密码不相同！');
+        }else {
+          this.$api.register({
+            studentNumber: this.studentNumber,
+            password: this.password
+          }).then(res=>{
+            if(res.status_code===1){
+              this.$message({
+                message: '注册成功！',
+                type: 'success'
+              });
+              this.$router.replace({path: '/login'});
+            }else {
+              this.$message.error('注册失败，用户已存！');
+            }
+          }).catch(e=>{
+            console.log(e);
+            this.$message.error('注册失败，网络异常！');
+          })
+        }
+      }else{
+        this.$message.error('注册信息未填写完整！');
+      }
     }
   }
 }

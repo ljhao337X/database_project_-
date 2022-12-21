@@ -40,7 +40,18 @@ export default {
   },
   methods: {
     login() {
-      this.$router.push('index');
+      this.$api.userLogin({
+        studentNumber: this.userForm.studentNumber,
+        password: this.userForm.password
+      }).then(res => {
+        console.log(res);
+        if (res.status_code === 1) {
+          this.$globalData.userInfo = res.data;
+          this.$router.replace({path: '/index'});
+        } else {
+          this.$message.error(res.msg);
+        }
+      });
     },
     toIndex() {
       this.$router.replace({path:'/index'});

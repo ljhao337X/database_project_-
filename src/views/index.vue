@@ -24,17 +24,14 @@
                   </div>
                 </el-image>
                 <div class="idle-title">
-                  {{idle.idleName}}
+                  {{idle.name}}
                 </div>
                 <el-row style="margin: 5px 10px;">
                   <el-col :span="12">
-                    <div class="idle-prive">￥{{idle.idlePrice}}</div>
-                  </el-col>
-                  <el-col :span="12">
-                    <div class="idle-place">{{idle.idlePlace}}</div>
+                    <div class="idle-prive">￥{{idle.price}}</div>
                   </el-col>
                 </el-row>
-                <div class="idle-time">{{idle.timeStr}}</div>
+                <div class="idle-time">{{idle.str}}</div>
                 <div class="user-info">
                   <el-image
                       style="width: 30px; height: 30px"
@@ -81,13 +78,13 @@ export default {
   },
   data() {
     return {
-      labelName: '0',
+      labelName: 0,
       idleList: [{
+        id: 0,
         imgUrl: null,
-        idleName: 'second-hand phone',
-        idlePrice: '1100',
-        idlePlace: '20公寓',
-        idleStr: 'this is amazing',
+        name: 'second-hand phone',
+        price: '1100',
+        str: 'this is amazing',
         user: {
           avatar:null,
           nickname: 'danny',
@@ -98,17 +95,48 @@ export default {
     };
   },
   created() {
-    this.findIdleTiem(1)
+    if (this.$router.query.page) {
+      this.currentPage = this.$router.query.page;
+      this.labelName = this.$router.query.labelName;
+    }
+    this.findIdle(1)
   },
 
   methods: {
-    findIdleTiem(page){
+    findIdle(page){
+      // const loading = this.$loading({
+      //   lock: true,
+      //   text: '加载数据中',
+      //   spinner: 'el-icon-loading',
+      //   background: 'rgba(0, 0, 0, 0)'
+      // });
+      // loading.lock=false;
+      this.$api.findIdleByLabel({
+        idleLabel:this.labelName,
+        page: page,
+        nums: 8
+      }).then(res => {
+        console.log(res);
+        this.idleList = res.data.list;
+        this.totalItem=res.data.count;
+        console.log(this.totalItem);
+      }).catch(e => {
+        console.log(e)
+      }).finally(()=>{
+        //loading.close();
+      })
+
     },
     handleClick(tab, event) {
+      console.log(this.labelName);
+      this.$router.replace({query: {page: 1,labelName:this.labelName}});
     },
     handleCurrentChange(val) {
+      console.log(`当前页: ${val}`);
+      this.$router.replace({query: {page: val,labelName:this.labelName}});
     },
     toDetails(idle) {
+      this.$router.push({path: '/detail', query: {id: idle.id}});
     }
   }
 }

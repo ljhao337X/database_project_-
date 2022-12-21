@@ -38,6 +38,16 @@ export default {
       isLogin: false
     }
   },
+  created(){
+    // console.log("header");
+    if(! this.$globalData.userInfo.nickname){
+      this.isLogin = false;
+    }else {
+      this.nickname=this.$globalData.userInfo.nickname;
+      this.avatar=this.$globalData.userInfo.avatar;
+      this.isLogin=true;
+    }
+  },
   methods: {
     searchItems() {
       window.alert("wrong input");
@@ -46,7 +56,9 @@ export default {
       this.$router.push('newpost')
     },
     toProfile() {
-
+      if ('/profile' !== this.$route.path) {
+        this.$router.push({path: '/profile'});
+      }
     },
     loginOut() {
 

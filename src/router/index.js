@@ -52,8 +52,8 @@ const routes = [
     }
   },
   {
-    path: '/MyProfile',
-    name: 'MyProfile',
+    path: '/profile',
+    name: 'profile',
     component: function (){
       return import('../views/MyProfile.vue')
     }
