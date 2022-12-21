@@ -22,6 +22,20 @@ const api = {
             params: query
         });
     },
+    userRename(query) {
+        return request({
+            url: '/user/rename',
+            method: 'get',
+            params: query
+        });
+    },
+    updatePassword(query) {
+        return request({
+            url: '/user/updatePassword',
+            method: 'get',
+            params: query
+        });
+    },
     getMyIdle(query) {
         return request({
             url: '/user/idle',
@@ -50,6 +64,13 @@ const api = {
             method: 'get',
             params: query
         });
+    },
+    addIdle(query) {
+        return request({
+            url: '/idle/add',
+            method: 'post',
+            params: query
+        })
     },
 
     updateIdle(query) {

@@ -17,45 +17,6 @@
           </el-upload>
           <div class="user-info-details-text">
             <div class="user-info-details-text-nickname">{{user.nickname}}</div>
-            <div class="user-info-details-text-edit">
-              <el-button type="primary" @click="editUserInfoDialogVisible = true">编辑个人信息</el-button>
-            </div>
-            <el-dialog
-                title="编辑个人信息"
-                :visible.sync="editUserInfoDialogVisible"
-                width="400px">
-              <div class="edit-tip">昵称</div>
-              <el-input
-                  v-model="user_new.nickname"
-                  :disabled="notUserNicknameEdit">
-                <el-button slot="append" type="warning" icon="el-icon-edit"
-                           @click="notUserNicknameEdit = false">编辑
-                </el-button>
-              </el-input>
-              <div v-if="userPasswordEdit">
-                <div class="edit-tip">原密码</div>
-                <el-input v-model="userPassword1" show-password></el-input>
-                <div class="edit-tip">新密码</div>
-                <el-input v-model="userPassword2" show-password></el-input>
-                <div class="edit-tip">确认新密码</div>
-                <el-input v-model="userPassword3" show-password></el-input>
-              </div>
-              <div v-else>
-                <div class="edit-tip">密码</div>
-                <el-input
-                    value="1212121"
-                    :disabled="true"
-                    show-password>
-                  <el-button slot="append" type="warning" icon="el-icon-edit"
-                             @click="userPasswordEdit = true">编辑
-                  </el-button>
-                </el-input>
-              </div>
-              <div class="foot-button">
-                <el-button @click="finishAllEditing">完成</el-button>
-                <el-button @click="cancelAllEditing">取消</el-button>
-              </div>
-            </el-dialog>
           </div>
         </div>
       </div>
@@ -63,13 +24,11 @@
         <el-tabs v-model="activeName" @tab-click="handleClick">
           <el-tab-pane label="我发布的" name="post"></el-tab-pane>
           <el-tab-pane label="我卖出的" name="sold"></el-tab-pane>
-          <el-tab-pane label="已下架的" name="offline"></el-tab-pane>
-          <el-tab-pane label="正在进行" name="order"></el-tab-pane>
         </el-tabs>
         <div class="idle-container-list">
           <div v-for="item in idleList" class="idle-container-list-item">
-            <div class="idle-container-list-item-detile" @click="toDetails(activeName,item)">
-<!--              依次是图片、价格（状态）、介绍、和下架按钮。-->
+            <div class="idle-container-list-item-detail" @click="toDetails(activeName,item)">
+              <!--              依次是图片、价格（状态）、介绍、和下架按钮。-->
               <el-image
                   style="width: 100px; height: 100px;"
                   :src="item.imgUrl"
@@ -91,13 +50,12 @@
                   </div>
                   <el-button v-if="activeName==='post'" type="danger" size="mini" slot="reference"
                              plain @click.stop="handle(activeName,item,index)">
-                    下架
+                    举报
                   </el-button>
                   <el-button v-else-if="activeName==='sold'" type="primary" size="mini" slot="reference"
                              plain @click.stop="handle(activeName,item,index)">
                     查看订单
                   </el-button>
-                  <el-button v-else-if="activeName==='offline'" type="success" size="mini" slot="reference" :disabled="false">恢复上架</el-button>
                 </div>
               </div>
             </div>
@@ -127,23 +85,11 @@ export default {
       handleName: ['下架', '删除', '取消收藏', '', ''],
       orderStatus: ['待付款', '待发货', '待收货', '已完成', '已取消'],
 
-      editUserInfoDialogVisible: false,
-      notUserNicknameEdit: true,
-      userPasswordEdit: false,
-
-      userPassword1: '',
-      userPassword2: '',
-      userPassword3: '',
       selectedOptions: [],//存放默认值
-      user : {
+      user:{
         id: '2037924',
         nickname: 'Danny',
-        avatar: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png',
-        password: ''
-      },
-      user_new:{
-        nickname: 'Danny',
-        avatar: ''
+        avatar: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png'
       },
       idleList: [{
         id: '121',
@@ -161,7 +107,7 @@ export default {
   created() {
     if (!this.$globalData.userInfo.nickname) {
       this.$api.getUserInfo({
-        id:this.$globalData.userInfo.id
+        id:this.$router.query.userId
       }).then(res => {
         if (res.status_code === 1) {
           this.$globalData.userInfo = res.data;
@@ -175,51 +121,6 @@ export default {
     this.getMyIdle();
   },
   methods: {
-    finishAllEditing() {
-      if (!this.notUserNicknameEdit) {
-        this.$api.userRename({
-          nickname: this.user_new.nickname,
-          id: this.user.id
-        }).then(res => {
-          this.$globalData.userInfo.nickname = this.user_new.nickname;
-          this.user.nickname = this.user_new.nickname;
-        })
-      }
-      if (this.userPasswordEdit) {
-        if (!this.userPassword1 || !this.userPassword2) {
-          this.$message.error('密码为空！');
-        } else if (this.userPassword2 === this.userPassword3) {
-          this.$api.updatePassword({
-            id: this.user.id,
-            oldPassword: this.userPassword1,
-            newPassword: this.userPassword2
-          }).then(res => {
-            if (res.status_code === 1) {
-              this.user.password = this.userPassword2;
-              this.$message({
-                message: '修改成功！',
-                type: 'success'
-              });
-              this.userPassword1 = '';
-              this.userPassword2 = '';
-              this.userPassword3 = '';
-            } else {
-              this.$message.error('旧密码错误，修改失败！');
-            }
-          })
-        } else {
-          this.$message.error('两次输入的密码不一致！');
-        }
-      }
-      this.notUserNicknameEdit = true;
-      this.editUserInfoDialogVisible = false;
-      this.userPasswordEdit = false;
-    },
-    cancelAllEditing() {
-      this.notUserNicknameEdit = true;
-      this.editUserInfoDialogVisible = false;
-      this.userPasswordEdit = false;
-    },
     fileHandleSuccess(response, file, fileList) {
 
     },
@@ -302,7 +203,7 @@ export default {
   border-bottom: none;
 }
 
-.idle-container-list-item-detile {
+.idle-container-list-item-detail {
   height: 120px;
   display: flex;
   align-items: center;

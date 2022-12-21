@@ -40,18 +40,24 @@ export default {
   },
   methods: {
     login() {
-      this.$api.userLogin({
-        studentNumber: this.userForm.studentNumber,
-        password: this.userForm.password
-      }).then(res => {
-        console.log(res);
-        if (res.status_code === 1) {
-          this.$globalData.userInfo = res.data;
-          this.$router.replace({path: '/index'});
-        } else {
-          this.$message.error(res.msg);
-        }
-      });
+      if(this.userForm.studentNumber && this.userForm.password) {
+        this.$api.userLogin({
+          id: this.userForm.studentNumber,
+          password: this.userForm.password
+        }).then(res => {
+          console.log(res);
+          if (res.status_code === 1) {
+            this.$globalData.userInfo = res.data;
+            this.$router.replace({path: '/index'});
+          } else {
+            this.$message.error(res.msg);
+          }
+        });
+      }
+      else {
+        this.$message.error('请完整填写账号和密码')
+      }
+
     },
     toIndex() {
       this.$router.replace({path:'/index'});

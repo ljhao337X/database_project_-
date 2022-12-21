@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import index from "vuex";
 
 Vue.use(VueRouter)
 
@@ -8,7 +9,9 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    component: HomeView
+    component: function () {
+      return import(/* webpackChunkName: "about" */ '../views/index.vue')
+    }
   },
   {
     path: '/about',
@@ -52,8 +55,8 @@ const routes = [
     }
   },
   {
-    path: '/profile',
-    name: 'profile',
+    path: '/myProfile',
+    name: 'myProfile',
     component: function (){
       return import('../views/MyProfile.vue')
     }
@@ -78,7 +81,15 @@ const routes = [
     component: function (){
       return import('../views/admin.vue')
     }
+  },
+  {
+    path: '/profile',
+    name: 'profile',
+    component: function (){
+      return import('../views/profile.vue')
+    }
   }
+
 ]
 
 const router = new VueRouter({

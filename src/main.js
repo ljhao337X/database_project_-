@@ -13,7 +13,7 @@ Vue.config.productionTip = false
 
 let globalData={
   userInfo:{
-    id: '',
+    id: '1',
     nickname:'',
     avatar: ''
   }
@@ -25,6 +25,35 @@ let sta={
   adminName:''
 };
 Vue.prototype.$sta = sta;
+
+// router.beforeEach((to, from, next) => {
+//     document.title = `${to.meta.title}`;
+//     // console.log(to.path,'userInfo:',Vue.prototype.$globalData.userInfo);
+//     const nickname = Vue.prototype.$globalData.userInfo.nickname;
+//     if (!nickname
+//         &&(to.path === '/me'
+//         || to.path === '/message'
+//         || to.path === '/release'
+//         || to.path === '/order')) {
+//         api.getUserInfo().then(res=>{
+//            console.log('getUserInfo:',res);
+//            if(res.status_code!==1){
+//                next('/login');
+//            }else {
+//                res.data.signInTime=res.data.signInTime.substring(0,10);
+//                Vue.prototype.$globalData.userInfo=res.data;
+//                next();
+//            }
+//         }).catch(e=>{
+//             next('/login');
+//         });
+//
+//     }else{
+//         next();
+//     }
+// });
+
+
 
 new Vue({
   router,

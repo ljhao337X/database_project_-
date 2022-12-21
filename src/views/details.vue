@@ -3,20 +3,21 @@
   <app-head></app-head>
   <app-body>
     <div class="details-header">
-      <div class="details-header-user-info">
+      <div class="details-header-user-info" @click="toProfile">
         <el-image
             style="width: 80px; height: 80px;border-radius: 5px;"
-            :src="idle.user.avatar" fit="contain"></el-image>
+            :src="idle.user.avatar" fit="contain" ></el-image>
         <div style="margin-left: 10px;">
           <div class="details-header-nickname">{{idle.user.nickname}}</div>
         </div>
       </div>
       <div class="details-header-buy" :style="'width:'+(isMaster?'150px;':'280px;')">
         <div style="color: red;font-size: 18px;font-weight: 600;">￥{{idle.price}}</div>
-        <div v-if="!isMaster&&idle.status!==1" style="color: red;font-size: 16px;">闲置已下架或删除</div>
-        <el-button v-if="!isMaster&&idle.status===1" type="danger" plain @click="buyButton(idle)">立即购买</el-button>
-        <el-button v-if="isMaster&&idle.status===1" type="danger" @click="changeStatus(idle,2)" plain>下架</el-button>
-        <el-button v-if="isMaster&&idle.status===3" type="primary" @click="changeStatus(idle,1)" plain>重新上架</el-button>
+        <div v-if="!isMaster&&idle.status!==0" style="color: red;font-size: 16px;">闲置已下架或删除</div>
+        <el-button v-if="!isMaster&&idle.status===0" type="danger" plain @click="buyButton(idle)">立即购买</el-button>
+        <el-button v-if="!isMaster&&idle.status===1" type="danger" plain @click="buyButton(idle)">查看订单</el-button>
+        <el-button v-if="isMaster&&idle.status===0" type="danger" @click="changeStatus(idle,2)" plain>下架</el-button>
+        <el-button v-if="isMaster&&idle.status===2" type="primary" @click="changeStatus(idle,1)" plain>重新上架</el-button>
       </div>
     </div>
     <div class="details-info">
@@ -40,6 +41,7 @@
 import AppFoot from "@/components/AppFoot";
 import AppHead from "@/components/AppHeader";
 import AppBody from "@/components/AppPageBody";
+import idleList from "@/components/idleList";
 export default {
   name: "details",
   components: {
@@ -53,7 +55,7 @@ export default {
       id: '1',
       price: '9999',
       name: 'second-hand-phone',
-      status: 1,
+      status: 0,
       details: 'this is amazing',
       picList : [],
       user:{
@@ -61,15 +63,20 @@ export default {
         avatar: '',
         nickname: 'Danny'
       }
+    },
+    visitor: {
+      id: '1'
     }
   }},
   created(){
+    this.visitor = this.$globalData.userInfo;
     let idleId=this.$route.query.idleId;
     this.$api.getIdle({
       id:idleId
     }).then(res=>{
       console.log(res);
       if(res.data){
+        //get idle info
         let list=res.data.details.split(/\r?\n/);
         let str='';
         for(let i=0;i<list.length;i++){
@@ -78,10 +85,13 @@ export default {
         res.data.details=str;
         res.data.picList=JSON.parse(res.data.pictureList);
         this.idle=res.data;
-        console.log(this.idle);
-        let userId=this.$globalData.userInfo.id;
+
+        //console.log(this.idle);
+
+        //check isMaster
+        let userId=this.visitor.id;
         console.log('userid',userId)
-        if(userId == this.idle.user.id){
+        if(!this.visitor.id && userId == this.idle.user.id){
           console.log('isMaster');
           this.isMaster=true;
         }
@@ -95,7 +105,7 @@ export default {
     buyButton(idle) {
       this.$api.addOrder({
         idleId:idle.id,
-        buyerId: this.$globalData.userInfo.id
+        buyerId: this.visitor.id
       }).then(res=>{
         console.log(res);
         if(res.status_code===1){
@@ -119,6 +129,9 @@ export default {
           this.$message.error(res.msg)
         }
       });
+    },
+    toProfile() {
+      this.$router.push({path: '/profile', query: {id: this.idle.user.id}});
     }
   }
 }

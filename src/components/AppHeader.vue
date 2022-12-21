@@ -9,9 +9,8 @@
       </el-input>
     </div>
     <el-button type="success" @click="postAnItem"><i class="el-icon-plus"></i>发布闲置</el-button>
-<!--    <router-link v-if="!isLogin" class="user-name-text" to="/login">登录</router-link>-->
-<!--    v-else-->
-    <el-dropdown trigger="click">
+    <router-link v-if="!isLogin" class="user-name-text" to="/login">登录</router-link>
+    <el-dropdown v-else trigger="click">
       <div style="cursor:pointer;display: flex;align-items: center;">
         <div style="font-size: 16px;color: #409EFF;padding-right: 5px;">{{nicknameValue?nicknameValue:nickname}}</div>
         <el-avatar :src="avatarValue?avatarValue:avatar"></el-avatar>
@@ -57,7 +56,7 @@ export default {
     },
     toProfile() {
       if ('/profile' !== this.$route.path) {
-        this.$router.push({path: '/profile'});
+        this.$router.push({path: '/myProfile'});
       }
     },
     loginOut() {

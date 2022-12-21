@@ -8,7 +8,7 @@
             <div class="release-idle-container-title">发布闲置</div>
             <el-form :label-position="'right'" label-width="120px">
               <el-form-item label="闲置名称">
-                <el-input placeholder="为你的闲置取个名字吧" v-model="itemInfo.name"
+                <el-input placeholder="为你的闲置取个名字吧" v-model="idle.name"
                           maxlength="30"
                           show-word-limt>
                 </el-input>
@@ -18,19 +18,19 @@
                           type="textarea"
                           :autosize="{ minRows: 2, maxRows: 4}"
                           placeholder="为你的闲置写下详细介绍吧，越详细越容易受到平台的推荐哦!"
-                          v-model="itemInfo.details"
+                          v-model="idle.details"
                           maxlength="1500"
                           show-word-limit>
                 </el-input>
               </el-form-item>
               <div style="display: flex; justify-content: space-evenly;">
                 <el-form-item label="类别">
-                  <el-radio-group v-model="itemInfo.label">
+                  <el-radio-group v-model="idle.label">
                     <el-radio v-for="option in options" :label="option">{{ option }}</el-radio>
                   </el-radio-group>
                 </el-form-item>
                 <el-form-item label="价格">
-                  <el-input-number v-model="itemInfo.price" :precision="2" :step="10" :max="100000">
+                  <el-input-number v-model="idle.price" :precision="2" :step="10" :max="100000">
                     <div slot="prepend">价格</div>
                   </el-input-number>
                 </el-form-item>
@@ -86,20 +86,51 @@ export default {
     'app-foot':AppFoot},
   data() {
     return {
-      itemInfo: {
+      idle: {
         name: '',
         details: '',
-        pictureList: '',
+        picList: '',
         price: 0,
-        label: ''
+        label: '',
+        id: ''
       },
       options: ['户外', '数码', '家具', '图书', '服装', '饰品', '化妆品', '家居'],
+      imgList: [],
       dialogImageUrl: '',
       imgDialogVisible: false
     }
   },
+  created() {
+    if (this.$globalData.userInfo.id) {
+      this.idle.id = this.$globalData.userInfo.id;
+    }
+  },
   methods: {
     postButton() {
+      this.idle.picList=JSON.stringify(this.imgList);
+      console.log(this.itemInfo);
+      if(this.idle.name&&
+          this.idle.details&&
+          this.idle.picList&&
+          this.idle.idleLabel&&
+          this.idle.price){
+        this.$api.addIdle(this.idle).then(res=>{
+          if (res.status_code === 1) {
+            this.$message({
+              message: '发布成功！',
+              type: 'success'
+            });
+            console.log(res.data);
+            this.$router.replace({path: '/details', query: {id: res.data.id}});
+          } else {
+            this.$message.error('发布失败！'+res.msg);
+          }
+        }).catch(e=>{
+          this.$message.error('请填写完整信息');
+        })
+      }else {
+        this.$message.error('请填写完整信息！');
+      }
 
     }
   }

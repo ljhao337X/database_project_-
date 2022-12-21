@@ -13,7 +13,7 @@
             <div class="el-icon-lock"></div>
           </template>
         </el-input>
-        <el-input placeholder="请确认密码..." maxlength="16" v-model="checkPassword" class="register-input" clearable>
+        <el-input placeholder="请确认密码..." show-password maxlength="16" v-model="checkPassword" class="register-input" clearable>
           <template slot="prepend">
             <div class="el-icon-lock"></div>
           </template>
@@ -43,13 +43,12 @@ export default {
       this.$router.push('login')
     },
     register() {
-      console.log(this.userInfo.nickname);
       if(this.studentNumber && this.password && this.checkPassword){
         if(this.password!==this.checkPassword){
           this.$message.error('两次输入的密码不相同！');
         }else {
           this.$api.register({
-            studentNumber: this.studentNumber,
+            id: this.studentNumber,
             password: this.password
           }).then(res=>{
             if(res.status_code===1){
