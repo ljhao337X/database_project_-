@@ -11,7 +11,7 @@ Vue.use(ElementUI, {
 });
 Vue.config.productionTip = false
 
-let globalData={
+let globalData = {
   userInfo:{
     id: '1',
     nickname:'',

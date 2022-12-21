@@ -1,9 +1,9 @@
 import axios from 'axios';
-
+axios.defaults.baseURL = '/api';
 const service = axios.create({
     timeout: 5000,
-    baseURL:  'http://localhost:8080',
-    withCredentials:  true
+    baseURL:  'http://n8xdby.natappfree.cc',
+    withCredentials:  false
 });
 
 service.interceptors.request.use(

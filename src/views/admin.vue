@@ -91,7 +91,7 @@ export default {
   left: 0;
   right: 0;
   min-width: 100vw;
-  height: 58px;
+  height: 60px;
   background: #ffffff;
   display: flex;
   justify-content: space-between;

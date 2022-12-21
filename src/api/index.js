@@ -11,7 +11,7 @@ const api = {
     register(query) {
         return request({
             url: '/user/sign-in',
-            method: 'post',
+            method: 'get',
             params: query
         });
     },
@@ -68,7 +68,7 @@ const api = {
     addIdle(query) {
         return request({
             url: '/idle/add',
-            method: 'post',
+            method: 'get',
             params: query
         })
     },
@@ -84,7 +84,7 @@ const api = {
     addOrder(query) {
         return request({
             url: '/order/add',
-            method: 'post',
+            method: 'get',
             params: query
         })
     },

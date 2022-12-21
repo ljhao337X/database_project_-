@@ -41,16 +41,17 @@ export default {
   methods: {
     login() {
       if(this.userForm.studentNumber && this.userForm.password) {
+        console.log(this.userForm);
         this.$api.userLogin({
           id: this.userForm.studentNumber,
           password: this.userForm.password
         }).then(res => {
           console.log(res);
-          if (res.status_code === 1) {
+          if (res.status_code == 1) {
             this.$globalData.userInfo = res.data;
             this.$router.replace({path: '/index'});
           } else {
-            this.$message.error(res.msg);
+            this.$message.error(res.message);
           }
         });
       }
