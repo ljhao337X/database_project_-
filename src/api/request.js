@@ -1,9 +1,8 @@
 import axios from 'axios';
 
-axios.defaults.baseURL = '/api';
 const service = axios.create({
     timeout: 5000,
-    baseURL: 'http://fehuvk.natappfree.cc',
+    baseURL: '/api',
     withCredentials: false
 });
 

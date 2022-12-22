@@ -1,5 +1,3 @@
-<!--进入网页后的主页-->
-
 <template>
   <div>
     <app-head></app-head>
@@ -94,19 +92,20 @@ export default {
         }
       }],
       currentPage: 1,
-      totalItem: 1
+      totalItem: 8
     };
   },
   created() {
-    if (this.$router.query.page) {
-      this.currentPage = this.$router.query.page;
-      this.labelName = this.$router.query.labelName;
+    if (this.$route.query.page) {
+      this.currentPage = this.$route.query.page;
+      this.labelName = this.$route.query.labelName;
     }
-    this.findIdle(1)
+    console.log(this.currentPage)
+    this.findIdle()
   },
 
   methods: {
-    findIdle(page) {
+    findIdle() {
       // const loading = this.$loading({
       //   lock: true,
       //   text: '加载数据中',
@@ -116,11 +115,11 @@ export default {
       // loading.lock=false;
       this.$api.findIdleByLabel({
         idleLabel: this.labelName,
-        page: page,
+        page: this.currentPage,
         nums: 8
       }).then(res => {
         console.log(res);
-        this.idleList = res.data.list;
+        this.idleList = res.data;
         this.totalItem = res.data.count;
         console.log(this.totalItem);
       }).catch(e => {
@@ -132,14 +131,14 @@ export default {
     },
     handleClick(tab, event) {
       console.log(this.labelName);
-      this.$router.replace({query: {page: 1, labelName: this.labelName}});
+      this.findIdle();
     },
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
-      this.$router.replace({query: {page: val, labelName: this.labelName}});
+      this.findIdle();
     },
     toDetails(idle) {
-      this.$router.push({path: '/detail', query: {id: idle.id}});
+
     }
   }
 }

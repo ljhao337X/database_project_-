@@ -12,12 +12,17 @@
     <router-link v-if="!isLogin" class="user-name-text" to="/login">登录</router-link>
     <el-dropdown v-else trigger="click">
       <div style="cursor:pointer;display: flex;align-items: center;">
-        <div style="font-size: 16px;color: #409EFF;padding-right: 5px;">{{nicknameValue?nicknameValue:nickname}}</div>
+        <div style="font-size: 16px;color: #409EFF;padding-right: 5px;">{{ nicknameValue ? nicknameValue : nickname }}
+        </div>
         <el-avatar :src="avatarValue?avatarValue:avatar"></el-avatar>
       </div>
       <el-dropdown-menu slot="dropdown">
-        <el-dropdown-item><div @click="toProfile">个人中心</div></el-dropdown-item>
-        <el-dropdown-item divided style="color: red;"><div @click="loginOut">退出登录</div></el-dropdown-item>
+        <el-dropdown-item>
+          <div @click="toProfile">个人中心</div>
+        </el-dropdown-item>
+        <el-dropdown-item divided style="color: red;">
+          <div @click="loginOut">退出登录</div>
+        </el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
   </div>
@@ -28,7 +33,7 @@
 
 export default {
   name: "AppHeader",
-  props: ['searchInput','nicknameValue','avatarValue'],
+  props: ['searchInput', 'nicknameValue', 'avatarValue'],
   data() {
     return {
       searchStr: '',
@@ -37,14 +42,14 @@ export default {
       isLogin: false
     }
   },
-  created(){
+  created() {
     // console.log("header");
-    if(! this.$globalData.userInfo.nickname){
+    if (!this.$globalData.userInfo.nickname) {
       this.isLogin = false;
-    }else {
-      this.nickname=this.$globalData.userInfo.nickname;
-      this.avatar=this.$globalData.userInfo.avatar;
-      this.isLogin=true;
+    } else {
+      this.nickname = this.$globalData.userInfo.nickname;
+      this.avatar = this.$globalData.userInfo.avatar;
+      this.isLogin = true;
     }
   },
   methods: {
@@ -100,7 +105,8 @@ export default {
 .search-container {
   width: 300px;
 }
-.user-name-text{
+
+.user-name-text {
   font-size: 16px;
   font-weight: 600;
   color: #409EFF;

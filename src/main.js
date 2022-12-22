@@ -5,24 +5,27 @@ import store from './store'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import api from './api/index.js';
+import axios from "axios";
+
 Vue.prototype.$api = api;
+Vue.prototype.$axios = axios;
 Vue.use(ElementUI, {
-  size: 'large'
+    size: 'large'
 });
 Vue.config.productionTip = false
 
 let globalData = {
-  userInfo:{
-    id: '1',
-    nickname:'',
-    avatar: ''
-  }
+    userInfo: {
+        id: '1',
+        nickname: '',
+        avatar: ''
+    }
 };
-Vue.prototype.$globalData=globalData;
+Vue.prototype.$globalData = globalData;
 
-let sta={
-  isLogin:false,
-  adminName:''
+let sta = {
+    isLogin: false,
+    adminName: ''
 };
 Vue.prototype.$sta = sta;
 
@@ -54,9 +57,10 @@ Vue.prototype.$sta = sta;
 // });
 
 
-
 new Vue({
-  router,
-  store,
-  render: function (h) { return h(App) }
+    router,
+    store,
+    render: function (h) {
+        return h(App)
+    }
 }).$mount('#app')

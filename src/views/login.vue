@@ -46,6 +46,9 @@ export default {
       }
     }
   },
+  created() {
+    //console.log(this.userForm.studentNumber)
+  },
   methods: {
     login() {
       if (this.userForm.studentNumber && this.userForm.password) {
