@@ -6,9 +6,9 @@
         <div class="details-header-user-info" @click="toProfile">
           <el-image
               style="width: 80px; height: 80px;border-radius: 5px;"
-              :src="idle.user.avatar" fit="contain"></el-image>
+              :src="user.avatar" fit="contain"></el-image>
           <div style="margin-left: 10px;">
-            <div class="details-header-nickname">{{ idle.user.nickname }}</div>
+            <div class="details-header-nickname">{{ user.nickname }}</div>
           </div>
         </div>
         <div class="details-header-buy" :style="'width:'+(isMaster?'150px;':'280px;')">
@@ -61,11 +61,11 @@ export default {
         status: 0,
         details: 'this is amazing',
         picList: [],
-        user: {
-          id: '1',
-          avatar: '',
-          nickname: 'Danny'
-        }
+      },
+      user: {
+        id: '1',
+        avatar: '',
+        nickname: 'Danny'
       },
       visitor: {
         id: '1'
@@ -73,29 +73,25 @@ export default {
     }
   },
   created() {
-    this.visitor = this.$globalData.userInfo;
-    let idleId = this.$route.query.idleId;
-    this.$api.getIdle({
-      id: idleId
-    }).then(res => {
+    this.visitor = this.$store.state.user;
+    this.$api.getIdle({id: this.$route.query.id}).then(res => {
       console.log(res);
-      if (res.data) {
+      if (res.data.idle.details) {
         //get idle info
-        let list = res.data.details.split(/\r?\n/);
+        let list = res.data.idle.details.split(/\r?\n/);
         let str = '';
         for (let i = 0; i < list.length; i++) {
           str += '<p>' + list[i] + '</p>';
         }
-        res.data.details = str;
-        res.data.picList = JSON.parse(res.data.pictureList);
-        this.idle = res.data;
-
+        res.data.idle.details = str;
+        this.idle = res.data.idle;
+        this.user = res.data.user;
         //console.log(this.idle);
 
         //check isMaster
         let userId = this.visitor.id;
         console.log('userid', userId)
-        if (!this.visitor.id && userId == this.idle.user.id) {
+        if (this.visitor.id && userId == this.user.id) {
           console.log('isMaster');
           this.isMaster = true;
         }

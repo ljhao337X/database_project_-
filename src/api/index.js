@@ -68,7 +68,7 @@ const api = {
     addIdle(query) {
         return request({
             url: '/idle/add',
-            method: 'get',
+            method: 'post',
             params: query
         })
     },

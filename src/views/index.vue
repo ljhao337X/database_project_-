@@ -14,35 +14,35 @@
         </el-tabs>
         <div style="margin: 0 20px;">
           <el-row :gutter="30">
-            <el-col :span="6" v-for="(idle,index) in idleList">
-              <div class="idle-card" @click="toDetails(idle)">
+            <el-col :span="6" v-for="(item,index) in idleList">
+              <div class="idle-card" @click="toDetails(item.idle)">
                 <el-image
                     style="width: 100%; height: 160px"
-                    :src="idle.imgUrl"
+                    :src="item.idle.imgUrl"
                     fit="contain">
                   <div slot="error" class="image-slot">
                     <i class="el-icon-picture-outline">无图</i>
                   </div>
                 </el-image>
                 <div class="idle-title">
-                  {{ idle.name }}
+                  {{ item.idle.name }}
                 </div>
                 <el-row style="margin: 5px 10px;">
                   <el-col :span="12">
-                    <div class="idle-prive">￥{{ idle.price }}</div>
+                    <div class="idle-prive">￥{{ item.idle.price }}</div>
                   </el-col>
                 </el-row>
-                <div class="idle-time">{{ idle.str }}</div>
+                <div class="idle-time">{{ item.idle.details }}</div>
                 <div class="user-info">
                   <el-image
                       style="width: 30px; height: 30px"
-                      :src="idle.user.avatar"
+                      :src="item.user.avatar"
                       fit="contain">
                     <div slot="error" class="image-slot">
                       <i class="el-icon-picture-outline">无图</i>
                     </div>
                   </el-image>
-                  <div class="user-nickname">{{ idle.user.nickname }}</div>
+                  <div class="user-nickname">{{ item.user.nickname }}</div>
                 </div>
               </div>
             </el-col>
@@ -81,12 +81,15 @@ export default {
     return {
       labelName: 0,
       idleList: [{
-        id: 0,
-        imgUrl: null,
-        name: 'second-hand phone',
-        price: '1100',
-        str: 'this is amazing',
+        idle: {
+          id: 0,
+          imgUrl: null,
+          name: 'second-hand phone',
+          price: '1100',
+          details: 'this is amazing',
+        },
         user: {
+          id: '',
           avatar: null,
           nickname: 'danny',
         }
@@ -138,7 +141,7 @@ export default {
       this.findIdle();
     },
     toDetails(idle) {
-
+      this.$router.push({path: '/details', query: {id:idle.id}});
     }
   }
 }

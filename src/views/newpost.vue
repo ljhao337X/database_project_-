@@ -26,7 +26,7 @@
               <div style="display: flex; justify-content: space-evenly;">
                 <el-form-item label="类别">
                   <el-radio-group v-model="idle.label">
-                    <el-radio v-for="option in options" :label="option">{{ option }}</el-radio>
+                    <el-radio v-for="i in option_index" :label="i">{{ options[i] }}</el-radio>
                   </el-radio-group>
                 </el-form-item>
                 <el-form-item label="价格">
@@ -78,6 +78,7 @@
 import AppFoot from "@/components/AppFoot";
 import AppHead from "@/components/AppHeader";
 import AppBody from "@/components/AppPageBody";
+import idleList from "@/components/idleList";
 
 export default {
   name: "newpost",
@@ -91,11 +92,17 @@ export default {
       idle: {
         name: '',
         details: '',
-        picList: '',
+        picture1: '',
+        picture2: '',
+        picture3: '',
+        id: '',
         price: 0,
-        label: '',
-        id: ''
+        label: '', //这里存一个int即可
       },
+      //使用index访问类别
+      //todo
+      //index为1的话会出现错误
+      option_index: [0, 1, 2, 3, 4, 5, 6, 7],
       options: ['户外', '数码', '家具', '图书', '服装', '饰品', '化妆品', '家居'],
       imgList: [],
       dialogImageUrl: '',
@@ -103,34 +110,33 @@ export default {
     }
   },
   created() {
-    if (this.$globalData.userInfo.id) {
-      this.idle.id = this.$globalData.userInfo.id;
+    if (this.$store.state.is_login) {
+      this.idle.id = this.$store.state.user.id;
     }
   },
   methods: {
     postButton() {
-      this.idle.picList = JSON.stringify(this.imgList);
-      console.log(this.itemInfo);
       if (this.idle.name &&
           this.idle.details &&
-          this.idle.picList &&
-          this.idle.idleLabel &&
+          this.idle.label &&
           this.idle.price) {
+        console.log(this.idle);
         this.$api.addIdle(this.idle).then(res => {
           if (res.status_code === 1) {
             this.$message({
               message: '发布成功！',
               type: 'success'
             });
-            console.log(res.data);
-            this.$router.replace({path: '/details', query: {id: res.data.id}});
+            this.$router.push({path: '/details', query: {id: res.data}});
+            console.log(res.data.id);
           } else {
-            this.$message.error('发布失败！' + res.msg);
+            this.$message.error('发布失败！' + res.message);
           }
         }).catch(e => {
           this.$message.error('请填写完整信息');
         })
       } else {
+        console.log(this.idle);
         this.$message.error('请填写完整信息！');
       }
 

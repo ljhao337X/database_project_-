@@ -70,7 +70,8 @@ export default {
               this.$sta.adminName = res.data.nickname;
             } else {
               // 一般用户，跳转到index界面
-              this.$globalData.userInfo = res.data;
+              this.$store.commit('set_is_login', true);
+              this.$store.commit('set_user_info', res.data);
               this.$router.replace({path: '/index'});
             }
           } else {

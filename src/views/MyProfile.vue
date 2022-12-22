@@ -73,7 +73,7 @@
               <!--              依次是图片、价格（状态）、介绍、和下架按钮。-->
               <el-image
                   style="width: 100px; height: 100px;"
-                  :src="item.imgUrl"
+                  :src="item.idle.imgUrl"
                   fit="cover">
                 <div slot="error" class="image-slot">
                   <i class="el-icon-picture-outline">无图</i>
@@ -81,13 +81,13 @@
               </el-image>
               <div class="idle-container-list-item-text">
                 <div class="idle-container-list-title">
-                  {{ item.name }}
+                  {{ item.idle.name }}
                 </div>
-                <div class="idle-container-list-idle-details" v-html="item.details">
-                  {{ item.details }}
+                <div class="idle-container-list-idle-details" v-html="item.idle.details">
+                  {{ item.idle.details }}
                 </div>
                 <div class="idle-item-foot">
-                  <div class="idle-prive">￥{{ item.price }}
+                  <div class="idle-prive">￥{{ item.idle.price }}
                     {{ (activeName === 'post') ? '待出售' : (activeName === 'sold') ? '已出售' : '已下架' }}
                   </div>
                   <el-button v-if="activeName==='post'" type="danger" size="mini" slot="reference"
@@ -128,6 +128,7 @@ export default {
     return {
       imgFileList: [],
       activeName: 'post',
+      statusName: ['我发布的','我卖出的', '已下架的', '正在进行'],
       handleName: ['下架', '删除', '取消收藏', '', ''],
       orderStatus: ['待付款', '待发货', '待收货', '已完成', '已取消'],
 
@@ -150,11 +151,13 @@ export default {
         avatar: ''
       },
       idleList: [{
-        id: '121',
-        imgUrl: null,
-        name: 'second-hand phone',
-        price: '1100',
-        details: 'this is amazing',
+        idle: {
+          id: '121',
+          imgUrl: null,
+          name: 'second-hand phone',
+          price: '1100',
+          details: 'this is amazing',
+        },
         user: {
           avatar: null,
           nickname: 'danny',
@@ -163,18 +166,17 @@ export default {
     };
   },
   created() {
-    if (!this.$globalData.userInfo.nickname) {
-      this.$api.getUserInfo({
-        id: this.$globalData.userInfo.id
-      }).then(res => {
-        if (res.status_code === 1) {
-          this.$globalData.userInfo = res.data;
-          this.user = this.$globalData.userInfo;
-        }
-      })
+    if (this.$store.state.is_login) {
+      console.log('已经登录');
+      let userId = this.$store.state.user.id;
+      this.$api.getUserInfo({id:userId})
+          .then(res=>{
+            this.user = res.data;
+            this.user_new.nickname = this.user.nickname;
+
+          })
     } else {
-      this.user = this.$globalData.userInfo;
-      console.log(this.userInfo);
+      console.log(this.user);
     }
     this.getMyIdle();
   },
@@ -253,13 +255,18 @@ export default {
     handleClick(tab, event) {
       //null
     },
-    getMySoldIdle() {
-      for (let i = 0; i <= 2; i++) {
-        this.$api.getMyIdle({id: this.user.id, status: i}).then(res => {
+    getMyIdle() {
+      console.log('准备找idle')
+      for (let index = 0; index <= 2; index++) {
+        this.$api.getMyIdle({
+          id: this.user.id,
+          status: 1
+        }).then(res => {
           if (res.status_code === 1) {
-            console.log('getMySoldIdle', res.data);
-            this.idleList[i] = res.data;
+            console.log('getMyIdle', res.data);
+            this.idleList[index] = res.data;
           }
+          console.log('已经找到idle')
         })
       }
 

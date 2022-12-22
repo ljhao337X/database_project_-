@@ -1,12 +1,40 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import createPersistedState from 'vuex-persistedstate';
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-    state: {},
+    state: {
+        token: '',
+        is_login: false,
+        user: {
+            id: '',
+            nickname: '',
+            avatar: ''
+        }
+    },
     getters: {},
-    mutations: {},
+    mutations: {
+        set_token(state, token) {
+            state.token = token;
+        },
+        set_is_login(state, is_login) {
+            state.is_login = is_login;
+        },
+        logout(state) {
+            state.is_login = false;
+        }
+    },
     actions: {},
-    modules: {}
-})
+    modules: {},
+    plugins: [
+        createPersistedState({
+            storage: window.localStorage,
+            key: 'store',
+            render(state) {
+                return { ...state };
+            },
+        }),
+    ],
+});
