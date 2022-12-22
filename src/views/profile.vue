@@ -16,7 +16,7 @@
                 fit="contain"></el-image>
           </el-upload>
           <div class="user-info-details-text">
-            <div class="user-info-details-text-nickname">{{user.nickname}}</div>
+            <div class="user-info-details-text-nickname">{{ user.nickname }}</div>
           </div>
         </div>
       </div>
@@ -39,14 +39,14 @@
               </el-image>
               <div class="idle-container-list-item-text">
                 <div class="idle-container-list-title">
-                  {{item.name}}
+                  {{ item.name }}
                 </div>
                 <div class="idle-container-list-idle-details" v-html="item.details">
-                  {{item.details}}
+                  {{ item.details }}
                 </div>
                 <div class="idle-item-foot">
-                  <div class="idle-prive">￥{{item.price}}
-                    {{(activeName==='post')?'待出售':(activeName==='sold')? '已出售':'已下架'}}
+                  <div class="idle-prive">￥{{ item.price }}
+                    {{ (activeName === 'post') ? '待出售' : (activeName === 'sold') ? '已出售' : '已下架' }}
                   </div>
                   <el-button v-if="activeName==='post'" type="danger" size="mini" slot="reference"
                              plain @click.stop="handle(activeName,item,index)">
@@ -71,12 +71,13 @@
 import AppFoot from "@/components/AppFoot";
 import AppHead from "@/components/AppHeader";
 import AppBody from "@/components/AppPageBody";
+
 export default {
   name: "MyProfile",
   components: {
-    'app-head':AppHead,
-    'app-body':AppBody,
-    'app-foot':AppFoot
+    'app-head': AppHead,
+    'app-body': AppBody,
+    'app-foot': AppFoot
   },
   data() {
     return {
@@ -86,7 +87,7 @@ export default {
       orderStatus: ['待付款', '待发货', '待收货', '已完成', '已取消'],
 
       selectedOptions: [],//存放默认值
-      user:{
+      user: {
         id: '2037924',
         nickname: 'Danny',
         avatar: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png'
@@ -98,7 +99,7 @@ export default {
         price: '1100',
         details: 'this is amazing',
         user: {
-          avatar:null,
+          avatar: null,
           nickname: 'danny',
         }
       }],
@@ -107,7 +108,7 @@ export default {
   created() {
     if (!this.$globalData.userInfo.nickname) {
       this.$api.getUserInfo({
-        id:this.$router.query.userId
+        id: this.$router.query.userId
       }).then(res => {
         if (res.status_code === 1) {
           this.$globalData.userInfo = res.data;
@@ -125,21 +126,20 @@ export default {
 
     },
     toDetails(activeName, item) {
-      if(activeName=='post') {
+      if (activeName == 'post') {
         this.$router.push({path: '/detail', query: {id: item.id}});
-      }
-      else if (activeName=='sold' || activeName == 'order') {
+      } else if (activeName == 'sold' || activeName == 'order') {
         this.$router.push({path: '/order', query: {id: item.id}});
       }
     },
     handleClick(tab, event) {
       //null
     },
-    getMySoldIdle(){
-      for(let i = 0; i<=2; i++) {
-        this.$api.getMyIdle({id:this.user.id, status: i}).then(res=>{
-          if (res.status_code === 1){
-            console.log('getMySoldIdle',res.data);
+    getMySoldIdle() {
+      for (let i = 0; i <= 2; i++) {
+        this.$api.getMyIdle({id: this.user.id, status: i}).then(res => {
+          if (res.status_code === 1) {
+            console.log('getMySoldIdle', res.data);
             this.idleList[i] = res.data;
           }
         })

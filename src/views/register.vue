@@ -8,12 +8,14 @@
             <div class="el-icon-user-solid"></div>
           </template>
         </el-input>
-        <el-input placeholder="请输入密码..." show-password maxlength="16" v-model="password" class="register-input" clearable>
+        <el-input placeholder="请输入密码..." show-password maxlength="16" v-model="password" class="register-input"
+                  clearable>
           <template slot="prepend">
             <div class="el-icon-lock"></div>
           </template>
         </el-input>
-        <el-input placeholder="请确认密码..." show-password maxlength="16" v-model="checkPassword" class="register-input" clearable>
+        <el-input placeholder="请确认密码..." show-password maxlength="16" v-model="checkPassword"
+                  class="register-input" clearable>
           <template slot="prepend">
             <div class="el-icon-lock"></div>
           </template>
@@ -32,7 +34,7 @@
 export default {
   name: "Register",
   data() {
-    return{
+    return {
       studentNumber: '',
       password: '',
       checkPassword: ''
@@ -43,29 +45,29 @@ export default {
       this.$router.push('login')
     },
     register() {
-      if(this.studentNumber && this.password && this.checkPassword){
-        if(this.password!==this.checkPassword){
+      if (this.studentNumber && this.password && this.checkPassword) {
+        if (this.password !== this.checkPassword) {
           this.$message.error('两次输入的密码不相同！');
-        }else {
+        } else {
           this.$api.register({
             id: this.studentNumber,
             password: this.password
-          }).then(res=>{
-            if(res.status_code===1){
+          }).then(res => {
+            if (res.status_code === 1) {
               this.$message({
                 message: '注册成功！',
                 type: 'success'
               });
               this.$router.replace({path: '/login'});
-            }else {
+            } else {
               this.$message.error('注册失败，用户已存！');
             }
-          }).catch(e=>{
+          }).catch(e => {
             console.log(e);
             this.$message.error('注册失败，网络异常！');
           })
         }
-      }else{
+      } else {
         this.$message.error('注册信息未填写完整！');
       }
     }
@@ -91,7 +93,7 @@ export default {
   color: #409EFF;
   font-size: 16px;
   text-decoration: none;
-  line-height:28px;
+  line-height: 28px;
 }
 
 .register-body {
@@ -99,14 +101,15 @@ export default {
   width: 400px;
   height: 100%;
 }
-.left-bottom{
+
+.left-bottom {
   float: left;
   padding: 10px;
   margin-bottom: 10px;
 }
 
 
-.login-container{
+.login-container {
   padding: 0 10px;
 }
 

@@ -78,12 +78,14 @@
 import AppFoot from "@/components/AppFoot";
 import AppHead from "@/components/AppHeader";
 import AppBody from "@/components/AppPageBody";
+
 export default {
   name: "newpost",
   components: {
-    'app-head':AppHead,
-    'app-body':AppBody,
-    'app-foot':AppFoot},
+    'app-head': AppHead,
+    'app-body': AppBody,
+    'app-foot': AppFoot
+  },
   data() {
     return {
       idle: {
@@ -107,14 +109,14 @@ export default {
   },
   methods: {
     postButton() {
-      this.idle.picList=JSON.stringify(this.imgList);
+      this.idle.picList = JSON.stringify(this.imgList);
       console.log(this.itemInfo);
-      if(this.idle.name&&
-          this.idle.details&&
-          this.idle.picList&&
-          this.idle.idleLabel&&
-          this.idle.price){
-        this.$api.addIdle(this.idle).then(res=>{
+      if (this.idle.name &&
+          this.idle.details &&
+          this.idle.picList &&
+          this.idle.idleLabel &&
+          this.idle.price) {
+        this.$api.addIdle(this.idle).then(res => {
           if (res.status_code === 1) {
             this.$message({
               message: '发布成功！',
@@ -123,12 +125,12 @@ export default {
             console.log(res.data);
             this.$router.replace({path: '/details', query: {id: res.data.id}});
           } else {
-            this.$message.error('发布失败！'+res.msg);
+            this.$message.error('发布失败！' + res.msg);
           }
-        }).catch(e=>{
+        }).catch(e => {
           this.$message.error('请填写完整信息');
         })
-      }else {
+      } else {
         this.$message.error('请填写完整信息！');
       }
 
@@ -158,10 +160,12 @@ export default {
 .release-idle-detiles-text {
   margin: 20px 0;
 }
-.release-idle-place{
+
+.release-idle-place {
   margin-bottom: 15px;
 }
-.release-tip{
+
+.release-tip {
   color: #555555;
   float: left;
   padding-right: 5px;
@@ -169,15 +173,18 @@ export default {
   line-height: 36px;
   font-size: 14px;
 }
-.release-idle-container-picture{
+
+.release-idle-container-picture {
   margin: 20px 0;
 
 }
-.release-idle-container-picture-title{
+
+.release-idle-container-picture-title {
   margin: 10px 0;
   color: #555555;
   font-size: 14px;
 }
+
 .picture-list {
   margin: 20px 0;
   display: flex;

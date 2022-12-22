@@ -89,6 +89,14 @@ const api = {
         })
     },
 
+    adminLogOut(query) {
+        return request({
+            url: '/admin',
+            method: 'get',
+            params: query
+        })
+    },
+
 }
 
 export default api;

@@ -56,9 +56,20 @@ export default {
           password: this.userForm.password
         }).then(res => {  // res为前面接口的返回值，可以将其理解成js的一个使用特性
           console.log(res);
-          if (res.status_code == 1) {
-            this.$globalData.userInfo = res.data;
-            this.$router.replace({path: '/index'});
+          if (res.status_code === 1) {
+            // 正常登录
+            if (res.data.type === '管理员') {
+              // 管理员，跳转到admin界面
+              this.$globalData.userInfo = res.data;
+              this.$router.replace({path: '/admin'})
+              // 需要额外维护的两个信息
+              this.$sta.isLogin = true;
+              this.$sta.adminName = res.data.nickname;
+            } else {
+              // 一般用户，跳转到index界面
+              this.$globalData.userInfo = res.data;
+              this.$router.replace({path: '/index'});
+            }
           } else {
             this.$message.error(res.message);
           }

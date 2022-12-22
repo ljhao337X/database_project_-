@@ -33,7 +33,8 @@
           <el-button
               size="mini"
               type="danger"
-              @click="makeOfflineGoods(scope.$index)">违规下架</el-button>
+              @click="makeOfflineGoods(scope.$index)">违规下架
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -66,7 +67,8 @@
           <el-button
               size="mini"
               type="danger"
-              @click="deleteIdle(scope.$index)">永久删除</el-button>
+              @click="deleteIdle(scope.$index)">永久删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -84,16 +86,17 @@
 
 </template>
 
+
 <script>
 export default {
   name: "idleList",
-  data(){
+  data() {
     return {
-      mode:1,
+      mode: 1,
       nowPage: 1,
       total: 8,
       onlineIdles: [],
-      offlineIdles:[],
+      offlineIdles: [],
     }
   },
   created() {
@@ -101,52 +104,54 @@ export default {
   methods: {
     handleCurrentChange(val) {
       this.nowPage = val;
-      if(this.mode == 1){
+      if (this.mode == 1) {
         this.getSellingIdle();
       }
-      if(this.mode == 2){
+      if (this.mode == 2) {
         this.getOfflineIdle();
       }
     },
-    handleSelect(val){
-      if(this.mode !== val){
+    handleSelect(val) {
+      if (this.mode !== val) {
         this.mode = val;
-        if(val == 1){
+        if (val == 1) {
           this.nowPage = 1;
           this.getSellingIdle();
         }
-        if(val == 2){
+        if (val == 2) {
           this.nowPage = 1;
           this.getOfflineIdle();
         }
       }
     },
-    makeOfflineGoods(i){
+    makeOfflineGoods(i) {
 
     },
-    deleteIdle(i){
+    deleteIdle(i) {
 
     },
-    getSellingIdle(){
+    getSellingIdle() {
 
     },
-    getOfflineIdle(){
+    getOfflineIdle() {
 
     }
   }
 }
 </script>
 
+
 <style scoped>
-.main-border{
+.main-border {
   background-color: #FFF;
   padding: 10px 30px;
-  box-shadow: 0 1px 15px -6px rgba(0,0,0,.5);
+  box-shadow: 0 1px 15px -6px rgba(0, 0, 0, .5);
   border-radius: 5px;
 }
+
 .block {
   display: flex;
-  justify-content:center;
+  justify-content: center;
   padding-top: 15px;
   padding-bottom: 10px;
   width: 100%;
