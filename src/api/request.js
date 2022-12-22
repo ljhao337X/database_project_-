@@ -2,7 +2,7 @@ import axios from 'axios';
 axios.defaults.baseURL = '/api';
 const service = axios.create({
     timeout: 5000,
-    baseURL:  'http://n8xdby.natappfree.cc',
+    baseURL:  'http://b3vx8e.natappfree.cc',
     withCredentials:  false
 });
 

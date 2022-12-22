@@ -1,25 +1,33 @@
 <template>
   <div class="login-container">
+    <!--  el-card 是element UI内置的东西-->
     <el-card class="box-card">
       <div class="login-body">
+        <!-- 点击北航二手交易平台跳转到主页-->
         <div class="login-title" @click="toIndex">北航二手交易平台</div>
         <el-form ref="form" :model="userForm">
+          <!--输入框为空时的话-->
           <el-input placeholder="请输入学号..." v-model="userForm.studentNumber" class="'login-input">
             <template slot="prepend">
               <div class="el-icon-user-solid"></div>
             </template>
           </el-input>
+
           <el-input placeholder="请输入密码..." v-model="userForm.password" class="login-input"
-                    @keyup.enter.native="login"  show-password>
+                    @keyup.enter.native="login" show-password>
             <template slot="prepend">
               <div class="el-icon-lock"></div>
             </template>
           </el-input>
+
+
           <div class="login-submit">
+            <!--点击登录键，执行login操作-->
             <el-button type="primary" @click="login">登录</el-button>
           </div>
         </el-form>
       </div>
+
       <div class="left-bottom">
         <el-link icon="el-icon-bottom-left" @click="toRegister">注册账号</el-link>
       </div>
@@ -40,12 +48,13 @@ export default {
   },
   methods: {
     login() {
-      if(this.userForm.studentNumber && this.userForm.password) {
+      if (this.userForm.studentNumber && this.userForm.password) {
         console.log(this.userForm);
+        // this.$api.userLogin是前后端交互的接口
         this.$api.userLogin({
           id: this.userForm.studentNumber,
           password: this.userForm.password
-        }).then(res => {
+        }).then(res => {  // res为前面接口的返回值，可以将其理解成js的一个使用特性
           console.log(res);
           if (res.status_code == 1) {
             this.$globalData.userInfo = res.data;
@@ -54,14 +63,13 @@ export default {
             this.$message.error(res.message);
           }
         });
-      }
-      else {
+      } else {
         this.$message.error('请完整填写账号和密码')
       }
 
     },
     toIndex() {
-      this.$router.replace({path:'/index'});
+      this.$router.replace({path: '/index'});
     },
     toRegister() {
       this.$router.push('register')
@@ -104,7 +112,8 @@ export default {
   display: flex;
   justify-content: center;
 }
-.left-bottom{
+
+.left-bottom {
   float: left;
   padding: 10px;
   margin-bottom: 10px;

@@ -1,53 +1,55 @@
 <template>
-<div style="background-color: #f6f6f6; min-height: 100vh;">
-  <el-container>
-    <el-header>
-      <div class="header">
-        <div class="app-name"><router-link to="/admin">后台管理</router-link></div>
-        <span class="app-title">管理员：{{admin.nickname}}</span>
-        <div class="app-logout">
-          <el-button style="margin-right: 100px" type="primary" @click="logout">退出登录</el-button>
-      </div>
-      </div>
-    </el-header>
+  <div style="background-color: #f6f6f6; min-height: 100vh;">
     <el-container>
-      <div class="mainBody">
-        <el-aside>
-          <el-col :span="24" >
-            <el-menu
-                default-active="1"
-                class="el-menu-vertical-demo"
-                @select="handleSelect"
-                background-color="#ffffff"
-                text-color="#303133"
-                active-text-color="#409EFF">
-              <el-menu-item index="1">
-                <i class="el-icon-goods"></i>
-                <span>闲置管理</span>
-              </el-menu-item>
-              <el-menu-item index="2">
-                <i class="el-icon-s-goods"></i>
-                <span slot="title">订单管理</span>
-              </el-menu-item>
-              <el-menu-item index="3" >
-                <i class="el-icon-s-custom"></i>
-                <span slot="title">用户管理</span>
-              </el-menu-item>
-            </el-menu>
-          </el-col>
-        </el-aside>
-        <el-main>
-          <idleList v-if="mode == 1"></idleList>
-          <orderList v-if="mode == 2"></orderList>
-          <userList v-if="mode == 3"></userList>
-        </el-main>
-      </div>
+      <el-header>
+        <div class="header">
+          <div class="app-name">
+            <router-link to="/admin">后台管理</router-link>
+          </div>
+          <span class="app-title">管理员：{{ admin.nickname }}</span>
+          <div class="app-logout">
+            <el-button style="margin-right: 100px" type="primary" @click="logout">退出登录</el-button>
+          </div>
+        </div>
+      </el-header>
+      <el-container>
+        <div class="mainBody">
+          <el-aside>
+            <el-col :span="24">
+              <el-menu
+                  default-active="1"
+                  class="el-menu-vertical-demo"
+                  @select="handleSelect"
+                  background-color="#ffffff"
+                  text-color="#303133"
+                  active-text-color="#409EFF">
+                <el-menu-item index="1">
+                  <i class="el-icon-goods"></i>
+                  <span>闲置管理</span>
+                </el-menu-item>
+                <el-menu-item index="2">
+                  <i class="el-icon-s-goods"></i>
+                  <span slot="title">订单管理</span>
+                </el-menu-item>
+                <el-menu-item index="3">
+                  <i class="el-icon-s-custom"></i>
+                  <span slot="title">用户管理</span>
+                </el-menu-item>
+              </el-menu>
+            </el-col>
+          </el-aside>
+          <el-main>
+            <idleList v-if="mode == 1"></idleList>
+            <orderList v-if="mode == 2"></orderList>
+            <userList v-if="mode == 3"></userList>
+          </el-main>
+        </div>
+      </el-container>
     </el-container>
-  </el-container>
-  <div class="foot">
-    <app-foot></app-foot>
+    <div class="foot">
+      <app-foot></app-foot>
+    </div>
   </div>
-</div>
 </template>
 
 <script>
@@ -55,28 +57,29 @@ import AppFoot from "@/components/AppFoot";
 import idleList from "@/components/idleList";
 import orderList from "@/components/orderList";
 import userList from "@/components/userList";
+
 export default {
   name: "admin",
-  components : {
-    'app-foot':AppFoot,
-    'idleList':idleList,
-    'orderList':orderList,
-    'userList':userList
+  components: {
+    'app-foot': AppFoot,
+    'idleList': idleList,
+    'orderList': orderList,
+    'userList': userList
   },
   data() {
     return {
-      admin : {
+      admin: {
         nickname: 'Danny'
       },
-      mode : 1
+      mode: 1
     }
   },
   methods: {
     logout() {
 
     },
-    handleSelect(val){
-      if(this.mode !== val){
+    handleSelect(val) {
+      if (this.mode !== val) {
         this.mode = val
       }
     },
@@ -99,6 +102,7 @@ export default {
   border-bottom: #eeeeee solid 2px;
   z-index: 1000;
 }
+
 .app-name {
   display: flex;
   justify-content: center;
@@ -106,42 +110,49 @@ export default {
   min-width: 10vw;
   flex: 1;
   height: 100%;
-  border-right:1px solid #e5e5e5;
+  border-right: 1px solid #e5e5e5;
 }
+
 .app-name a {
   color: #409EFF;
   font-size: 18px;
   font-weight: 800;
   text-decoration: none;
-  padding:0 20px;
+  padding: 0 20px;
 }
+
 .app-title {
   display: flex;
   justify-content: center;
   flex: 8;
 }
-.app-logOut{
-  display:flex;
+
+.app-logOut {
+  display: flex;
   flex: 1;
   justify-content: flex-end;
   align-items: center;
 }
+
 .mainBody {
   display: flex;
   width: 100%;
 }
+
 aside {
   flex: 1;
-  box-sizing:content-box;
+  box-sizing: content-box;
   min-width: 10vw;
-  min-height:calc(100vh - 120px);
+  min-height: calc(100vh - 120px);
   background-color: rgb(255, 255, 255);
   border-bottom: 1px solid #e5e5e5;
   border-right: 1px solid #e5e5e5;
 }
+
 main {
   flex: 9;
 }
+
 .foot {
   position: absolute;
   left: 0;
