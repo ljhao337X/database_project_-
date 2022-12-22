@@ -4,9 +4,10 @@
     <app-body>
       <div class="user-info-container">
         <div class="user-info-details">
+
           <el-upload
               action="http://localhost:8080/file/"
-              :on-success="fileHandleSuccess"
+              :http-request="uploadAvatar"
               :file-list="imgFileList"
               accept="image/*"
           >
@@ -165,11 +166,11 @@ export default {
       }).then(res => {
         if (res.status_code === 1) {
           this.$globalData.userInfo = res.data;
-          this.userInfo = this.$globalData.userInfo;
+          this.user = this.$globalData.userInfo;
         }
       })
     } else {
-      this.userInfo = this.$globalData.userInfo;
+      this.user = this.$globalData.userInfo;
       console.log(this.userInfo);
     }
     this.getMyIdle();
@@ -222,6 +223,22 @@ export default {
     },
     fileHandleSuccess(response, file, fileList) {
 
+    },
+    uploadAvatar(file){
+      const formData = new FormData();
+      formData.append('smfile', file.file);
+      this.$axios.post('/v2/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': 'XE1VgA0EoE4f3BzoPttqqZ1s4e44xLpm'
+        }
+      }, { timeout: 30000 }).then(res => {
+        if (res.data.code === 'image_repeated') {
+          this.userInfo.avatar = res.data.images;
+        } else {
+          this.userInfo.avatar = res.data.data.url;
+        }
+      })
     },
     toDetails(activeName, item) {
       if(activeName=='post') {

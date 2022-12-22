@@ -1,40 +1,41 @@
 <template>
-<div>
-  <app-head></app-head>
-  <app-body>
-    <div class="details-header">
-      <div class="details-header-user-info" @click="toProfile">
-        <el-image
-            style="width: 80px; height: 80px;border-radius: 5px;"
-            :src="idle.user.avatar" fit="contain" ></el-image>
-        <div style="margin-left: 10px;">
-          <div class="details-header-nickname">{{idle.user.nickname}}</div>
+  <div>
+    <app-head></app-head>
+    <app-body>
+      <div class="details-header">
+        <div class="details-header-user-info" @click="toProfile">
+          <el-image
+              style="width: 80px; height: 80px;border-radius: 5px;"
+              :src="idle.user.avatar" fit="contain"></el-image>
+          <div style="margin-left: 10px;">
+            <div class="details-header-nickname">{{ idle.user.nickname }}</div>
+          </div>
+        </div>
+        <div class="details-header-buy" :style="'width:'+(isMaster?'150px;':'280px;')">
+          <div style="color: red;font-size: 18px;font-weight: 600;">￥{{ idle.price }}</div>
+          <div v-if="!isMaster&&idle.status!==0" style="color: red;font-size: 16px;">闲置已下架或删除</div>
+          <el-button v-if="!isMaster&&idle.status===0" type="danger" plain @click="buyButton(idle)">立即购买</el-button>
+          <el-button v-if="!isMaster&&idle.status===1" type="danger" plain @click="buyButton(idle)">查看订单</el-button>
+          <el-button v-if="isMaster&&idle.status===0" type="danger" @click="changeStatus(idle,2)" plain>下架</el-button>
+          <el-button v-if="isMaster&&idle.status===2" type="primary" @click="changeStatus(idle,1)" plain>重新上架
+          </el-button>
         </div>
       </div>
-      <div class="details-header-buy" :style="'width:'+(isMaster?'150px;':'280px;')">
-        <div style="color: red;font-size: 18px;font-weight: 600;">￥{{idle.price}}</div>
-        <div v-if="!isMaster&&idle.status!==0" style="color: red;font-size: 16px;">闲置已下架或删除</div>
-        <el-button v-if="!isMaster&&idle.status===0" type="danger" plain @click="buyButton(idle)">立即购买</el-button>
-        <el-button v-if="!isMaster&&idle.status===1" type="danger" plain @click="buyButton(idle)">查看订单</el-button>
-        <el-button v-if="isMaster&&idle.status===0" type="danger" @click="changeStatus(idle,2)" plain>下架</el-button>
-        <el-button v-if="isMaster&&idle.status===2" type="primary" @click="changeStatus(idle,1)" plain>重新上架</el-button>
+      <div class="details-info">
+        <div class="details-info-title">{{ idle.name }}</div>
+        <div class="details-info-main" v-html="idle.details">
+          {{ idle.details }}
+        </div>
+        <div class="details-picture">
+          <el-image v-for="(imgUrl,i) in idle.picList"
+                    style="width: 90%;margin-bottom: 2px;"
+                    :src=imgUrl
+                    fit="contain"></el-image>
+        </div>
       </div>
-    </div>
-    <div class="details-info">
-      <div class="details-info-title">{{idle.name}}</div>
-      <div class="details-info-main" v-html="idle.details">
-        {{idle.details}}
-      </div>
-      <div class="details-picture">
-        <el-image v-for="(imgUrl,i) in idle.picList"
-                  style="width: 90%;margin-bottom: 2px;"
-                  :src=imgUrl
-                  fit="contain"></el-image>
-      </div>
-    </div>
-    <app-foot></app-foot>
-  </app-body>
-</div>
+      <app-foot></app-foot>
+    </app-body>
+  </div>
 </template>
 
 <script>
@@ -42,58 +43,61 @@ import AppFoot from "@/components/AppFoot";
 import AppHead from "@/components/AppHeader";
 import AppBody from "@/components/AppPageBody";
 import idleList from "@/components/idleList";
+
 export default {
   name: "details",
   components: {
-    'app-head':AppHead,
-    'app-body':AppBody,
-    'app-foot':AppFoot
+    'app-head': AppHead,
+    'app-body': AppBody,
+    'app-foot': AppFoot
   },
-  data() { return {
-    isMaster:false,
-    idle:{
-      id: '1',
-      price: '9999',
-      name: 'second-hand-phone',
-      status: 0,
-      details: 'this is amazing',
-      picList : [],
-      user:{
+  data() {
+    return {
+      isMaster: false,
+      idle: {
         id: '1',
-        avatar: '',
-        nickname: 'Danny'
-      }
-    },
-    visitor: {
-      id: '1'
-    }
-  }},
-  created(){
-    this.visitor = this.$globalData.userInfo;
-    let idleId=this.$route.query.idleId;
-    this.$api.getIdle({
-      id:idleId
-    }).then(res=>{
-      console.log(res);
-      if(res.data){
-        //get idle info
-        let list=res.data.details.split(/\r?\n/);
-        let str='';
-        for(let i=0;i<list.length;i++){
-          str+='<p>'+list[i]+'</p>';
+        price: '9999',
+        name: 'second-hand-phone',
+        status: 0,
+        details: 'this is amazing',
+        picList: [],
+        user: {
+          id: '1',
+          avatar: '',
+          nickname: 'Danny'
         }
-        res.data.details=str;
-        res.data.picList=JSON.parse(res.data.pictureList);
-        this.idle=res.data;
+      },
+      visitor: {
+        id: '1'
+      }
+    }
+  },
+  created() {
+    this.visitor = this.$globalData.userInfo;
+    let idleId = this.$route.query.idleId;
+    this.$api.getIdle({
+      id: idleId
+    }).then(res => {
+      console.log(res);
+      if (res.data) {
+        //get idle info
+        let list = res.data.details.split(/\r?\n/);
+        let str = '';
+        for (let i = 0; i < list.length; i++) {
+          str += '<p>' + list[i] + '</p>';
+        }
+        res.data.details = str;
+        res.data.picList = JSON.parse(res.data.pictureList);
+        this.idle = res.data;
 
         //console.log(this.idle);
 
         //check isMaster
-        let userId=this.visitor.id;
-        console.log('userid',userId)
-        if(!this.visitor.id && userId == this.idle.user.id){
+        let userId = this.visitor.id;
+        console.log('userid', userId)
+        if (!this.visitor.id && userId == this.idle.user.id) {
           console.log('isMaster');
-          this.isMaster=true;
+          this.isMaster = true;
         }
       }
       // $('html,body').animate({
@@ -104,28 +108,28 @@ export default {
   methods: {
     buyButton(idle) {
       this.$api.addOrder({
-        idleId:idle.id,
+        idleId: idle.id,
         buyerId: this.visitor.id
-      }).then(res=>{
+      }).then(res => {
         console.log(res);
-        if(res.status_code===1){
+        if (res.status_code === 1) {
           this.$router.push({path: '/order', query: {id: res.data.orderId}});
-        }else {
+        } else {
           this.$message.error(res.msg)
         }
-      }).catch(e=>{
+      }).catch(e => {
 
       })
     },
     changeStatus(idle, to) {
       this.$api.updateIdle({
-        id:idle.id,
-        idleStatus:to
-      }).then(res=>{
+        id: idle.id,
+        idleStatus: to
+      }).then(res => {
         console.log(res);
-        if(res.status_code===1){
-          this.idle.status=to;
-        }else {
+        if (res.status_code === 1) {
+          this.idle.status = to;
+        } else {
           this.$message.error(res.msg)
         }
       });

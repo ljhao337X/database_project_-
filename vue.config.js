@@ -1,16 +1,16 @@
-
-
 module.exports = {
 
     devServer: {
+        host: 'localhost',
+        open: true,
         proxy: {
             '/api': {
-                target: 'http://n8xdby.natappfree.cc', // 请求接口地址
+                target: 'http://fehuvk.natappfree.cc', // 请求接口地址
                 changeOrigin: true,
                 pathRewrite: {
                     '^/api': ''
                 }
-            },
+            }
         }
     }
 };

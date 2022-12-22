@@ -10,7 +10,7 @@
             </template>
           </el-input>
           <el-input placeholder="请输入密码..." v-model="userForm.password" class="login-input"
-                    @keyup.enter.native="login"  show-password>
+                    @keyup.enter.native="login" show-password>
             <template slot="prepend">
               <div class="el-icon-lock"></div>
             </template>
@@ -38,9 +38,12 @@ export default {
       }
     }
   },
+  created() {
+    //console.log(this.userForm.studentNumber)
+  },
   methods: {
     login() {
-      if(this.userForm.studentNumber && this.userForm.password) {
+      if (this.userForm.studentNumber && this.userForm.password) {
         console.log(this.userForm);
         this.$api.userLogin({
           id: this.userForm.studentNumber,
@@ -54,14 +57,13 @@ export default {
             this.$message.error(res.message);
           }
         });
-      }
-      else {
+      } else {
         this.$message.error('请完整填写账号和密码')
       }
 
     },
     toIndex() {
-      this.$router.replace({path:'/index'});
+      this.$router.replace({path: '/index'});
     },
     toRegister() {
       this.$router.push('register')
@@ -104,7 +106,8 @@ export default {
   display: flex;
   justify-content: center;
 }
-.left-bottom{
+
+.left-bottom {
   float: left;
   padding: 10px;
   margin-bottom: 10px;

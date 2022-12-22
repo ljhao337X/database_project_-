@@ -10,7 +10,7 @@ const api = {
     },
     register(query) {
         return request({
-            url: '/user/sign-in',
+            url: '/user/register',
             method: 'get',
             params: query
         });

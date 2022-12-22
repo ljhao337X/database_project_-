@@ -11,16 +11,16 @@ export default {
 </script>
 
 <style scoped>
-  .foot-container {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    height: 40px;
-    padding-top: 10px;
-  }
+.foot-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  height: 40px;
+  padding-top: 10px;
+}
 
-  .author {
-    color: #999999;
-    font-size: 14px;
-  }
+.author {
+  color: #999999;
+  font-size: 14px;
+}
 </style>

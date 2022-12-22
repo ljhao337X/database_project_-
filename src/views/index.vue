@@ -1,6 +1,6 @@
 <template>
   <div>
-    <app-head ></app-head>
+    <app-head></app-head>
     <app-body>
       <div style="min-height: 85vh;">
         <el-tabs v-model="labelName" type="card" @tab-click="handleClick">
@@ -24,14 +24,14 @@
                   </div>
                 </el-image>
                 <div class="idle-title">
-                  {{idle.name}}
+                  {{ idle.name }}
                 </div>
                 <el-row style="margin: 5px 10px;">
                   <el-col :span="12">
-                    <div class="idle-prive">￥{{idle.price}}</div>
+                    <div class="idle-prive">￥{{ idle.price }}</div>
                   </el-col>
                 </el-row>
-                <div class="idle-time">{{idle.str}}</div>
+                <div class="idle-time">{{ idle.str }}</div>
                 <div class="user-info">
                   <el-image
                       style="width: 30px; height: 30px"
@@ -41,7 +41,7 @@
                       <i class="el-icon-picture-outline">无图</i>
                     </div>
                   </el-image>
-                  <div class="user-nickname">{{idle.user.nickname}}</div>
+                  <div class="user-nickname">{{ idle.user.nickname }}</div>
                 </div>
               </div>
             </el-col>
@@ -72,9 +72,9 @@ import AppFoot from '../components/AppFoot.vue'
 export default {
   name: "index",
   components: {
-    'app-head':AppHead,
-    'app-body':AppBody,
-    'app-foot':AppFoot
+    'app-head': AppHead,
+    'app-body': AppBody,
+    'app-foot': AppFoot
   },
   data() {
     return {
@@ -86,24 +86,25 @@ export default {
         price: '1100',
         str: 'this is amazing',
         user: {
-          avatar:null,
+          avatar: null,
           nickname: 'danny',
         }
       }],
       currentPage: 1,
-      totalItem:1
+      totalItem: 8
     };
   },
   created() {
-    if (this.$router.query.page) {
-      this.currentPage = this.$router.query.page;
-      this.labelName = this.$router.query.labelName;
+    if (this.$route.query.page) {
+      this.currentPage = this.$route.query.page;
+      this.labelName = this.$route.query.labelName;
     }
-    this.findIdle(1)
+    console.log(this.currentPage)
+    this.findIdle()
   },
 
   methods: {
-    findIdle(page){
+    findIdle() {
       // const loading = this.$loading({
       //   lock: true,
       //   text: '加载数据中',
@@ -112,31 +113,31 @@ export default {
       // });
       // loading.lock=false;
       this.$api.findIdleByLabel({
-        idleLabel:this.labelName,
-        page: page,
+        idleLabel: this.labelName,
+        page: this.currentPage,
         nums: 8
       }).then(res => {
         console.log(res);
-        this.idleList = res.data.list;
-        this.totalItem=res.data.count;
+        this.idleList = res.data;
+        this.totalItem = res.data.count;
         console.log(this.totalItem);
       }).catch(e => {
         console.log(e)
-      }).finally(()=>{
+      }).finally(() => {
         //loading.close();
       })
 
     },
     handleClick(tab, event) {
       console.log(this.labelName);
-      this.$router.replace({query: {page: 1,labelName:this.labelName}});
+      this.findIdle();
     },
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
-      this.$router.replace({query: {page: val,labelName:this.labelName}});
+      this.findIdle();
     },
     toDetails(idle) {
-      this.$router.push({path: '/detail', query: {id: idle.id}});
+
     }
   }
 }

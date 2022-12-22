@@ -28,7 +28,7 @@
           width="100"
           show-overflow-tooltip>
         <template slot-scope="scope">
-          <div>{{orderStatus[scope.row.orderStatus]}}</div>
+          <div>{{ orderStatus[scope.row.orderStatus] }}</div>
         </template>
       </el-table-column>
       <el-table-column
@@ -41,7 +41,8 @@
           <el-button
               size="mini"
               type="danger"
-              @click="deleteOrder(scope.$index)">删除</el-button>
+              @click="deleteOrder(scope.$index)">删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -89,15 +90,16 @@ export default {
 </script>
 
 <style scoped>
-.main-border{
+.main-border {
   background-color: #FFF;
   padding: 10px 30px;
-  box-shadow: 0 1px 15px -6px rgba(0,0,0,.5);
+  box-shadow: 0 1px 15px -6px rgba(0, 0, 0, .5);
   border-radius: 5px;
 }
+
 .block {
   display: flex;
-  justify-content:center;
+  justify-content: center;
   padding-top: 15px;
   padding-bottom: 10px;
   width: 100%;
