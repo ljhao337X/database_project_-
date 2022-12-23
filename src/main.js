@@ -1,12 +1,13 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
-import store from './store'
+import store from './store/index.js'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import api from './api/index.js';
 import axios from "axios";
 
+Vue.prototype.$store = store;
 Vue.prototype.$api = api;
 Vue.prototype.$axios = axios;
 Vue.use(ElementUI, {
@@ -29,33 +30,17 @@ let sta = {
 };
 Vue.prototype.$sta = sta;
 
-// router.beforeEach((to, from, next) => {
-//     document.title = `${to.meta.title}`;
-//     // console.log(to.path,'userInfo:',Vue.prototype.$globalData.userInfo);
-//     const nickname = Vue.prototype.$globalData.userInfo.nickname;
-//     if (!nickname
-//         &&(to.path === '/me'
-//         || to.path === '/message'
-//         || to.path === '/release'
-//         || to.path === '/order')) {
-//         api.getUserInfo().then(res=>{
-//            console.log('getUserInfo:',res);
-//            if(res.status_code!==1){
-//                next('/login');
-//            }else {
-//                res.data.signInTime=res.data.signInTime.substring(0,10);
-//                Vue.prototype.$globalData.userInfo=res.data;
-//                next();
-//            }
-//         }).catch(e=>{
-//             next('/login');
-//         });
-//
-//     }else{
-//         next();
-//     }
-// });
+router.beforeEach((to, from, next) => {
 
+    // 若用户未登录且访问的页面需要登录，则跳转至登录页面
+    if (!store.state.is_login && to.meta.requireAuth) {
+        next({
+            name: 'index',
+        })
+    }
+
+    next()
+})
 
 new Vue({
     router,

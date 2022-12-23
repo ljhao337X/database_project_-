@@ -44,11 +44,11 @@ export default {
   },
   created() {
     // console.log("header");
-    if (!this.$globalData.userInfo.nickname) {
+    if (!this.$store.state.is_login) {
       this.isLogin = false;
     } else {
-      this.nickname = this.$globalData.userInfo.nickname;
-      this.avatar = this.$globalData.userInfo.avatar;
+      this.nickname = this.$store.state.user.nickname;
+      this.avatar = this.$store.state.user.avatar;
       this.isLogin = true;
     }
   },
@@ -65,7 +65,8 @@ export default {
       }
     },
     loginOut() {
-
+      this.$store.commit('set_is_login', false);
+      this.$router.go(0);
     }
   }
 }
