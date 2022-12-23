@@ -115,7 +115,7 @@ export default {
         if (res.status_code === 1) {
           this.$router.push({path: '/order', query: {id: res.data.orderId}});
         } else {
-          this.$message.error(res.msg)
+          this.$message.error(res.message)
         }
       }).catch(e => {
 
@@ -130,7 +130,7 @@ export default {
         if (res.status_code === 1) {
           this.idle.status = to;
         } else {
-          this.$message.error(res.msg)
+          this.$message.error(res.message)
         }
       });
     },
