@@ -104,6 +104,44 @@ const api = {
         })
     },
 
+    // 以下为管理员使用的接口
+    findIdleByState(query) {
+        return request({
+            url: '/idle/status',
+            method: 'get',
+            params: query
+        });
+    },
+    findOrder(query) {
+        return request({
+            url: '/order/getByPage',
+            method: 'get',
+            params: query
+        });
+    },
+    deleteAnOrder(query) {
+        return request({
+            url: '/order/delete',
+            method: 'get',
+            params: query
+        });
+    },
+    findUser(query) {
+        return request({
+            url: '/user/getByPage',
+            method: 'get',
+            params: query
+        });
+    },
+    updateUserStatus(query) {   // 修改用户的状态，是不是被封禁的
+        return request({
+            url: '/user/updateStatus',
+            method: 'get',
+            params: query
+        });
+    }
+
+
 }
 
 export default api;
