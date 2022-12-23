@@ -65,8 +65,12 @@ export default {
               // 管理员，跳转到admin界面
               this.$router.replace({path: '/admin'})
               // 需要额外维护的两个信息
-              this.$sta.isLogin = true;
-              this.$sta.adminName = res.data.nickname;
+              // this.$sta.isLogin = true;
+              // this.$sta.adminName = res.data.nickname;
+              console.log(res.data)
+              this.$store.commit('set_admin_is_login', true);
+              this.$store.commit('set_admin', res.data);
+
             } else {
               // 一般用户，跳转到index界面
               console.log('成功登录');

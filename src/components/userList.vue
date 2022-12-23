@@ -161,12 +161,14 @@ export default {
           // 获取总的页数
           this.totalPageNum = Number(res.pageNum);
           console.log("正常用户的总页数: " + this.totalPageNum)
+          console.log(res)
           // 获取用户信息
           this.userData = []
           for (let ii = 0; ii < res.data.length; ii++) {
             this.userData[ii] = {
               accountNumber:res.data[ii].id,
-              nickname:res.data[ii].nickname
+              nickname:res.data[ii].nickname,
+              avatar:res.data[ii].avatar
             }
           }
         } else {

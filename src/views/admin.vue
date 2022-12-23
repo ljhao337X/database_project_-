@@ -76,36 +76,33 @@ export default {
   data() {
     return {
       admin: {
-        nickname: 'Danny'
+        nickname: 'i am default'
       },
       mode: 1
     }
   },
   created() {
-    this.admin.nickname=this.$sta.adminName;
+    // 似乎是刷新一下sta的值都会变化，换成$store中的值
+    this.admin.nickname = this.$store.state.admin.nickname;
   },
   methods: {
     // 登出的函数
     logout() {
-      this.$api.adminLogOut({}).then(res => {
-        if (res.status_code === 1) {
-          this.$sta.isLogin = false;
-          this.$sta.adminName = '';
-          // 如果登出，会跳转到index界面
-          this.$router.push({path: '/index'});
-        }
-      }).catch(e => {
-        console.log(e)
-      })
+      this.$store.commit('set_admin_is_login', false);
+      this.$store.commit('set_admin_nickname', "");
+      // 如果登出，会跳转到index界面
+      this.$router.push({path: '/index'});
     },
 
     handleSelect(val) {
+      console.log("尝试更换mode")
       if (this.mode !== val) {
         this.mode = val
       }
     },
-  }
+  },
 }
+
 </script>
 
 <style scoped>

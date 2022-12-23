@@ -129,7 +129,6 @@ export default {
         page: this.nowPage,
         nums: 8
       }).then(res => {
-        console.log(res)
         if (res.status_code === 1) {
           // 正确返回了状态
           // 已经通过Array.isArray(res.data)检测了res.data是一个数组
@@ -154,7 +153,7 @@ export default {
     },
 
     getOfflineIdle() {
-      console.log("开始getOfflineIdle")
+      // console.log("开始getOfflineIdle")
       // 获得当前下架的产品的信息
       this.$api.findIdleByState({
         status: 2,  // 找下架的信息
@@ -194,8 +193,8 @@ export default {
 
     handleSelect(val) {
       // 用于修改当前显示的是上架的还是闲置的界面
-      console.log("start handleSelect, val = " + val)
-      console.log("now mode = " + this.mode)
+      // console.log("start handleSelect, val = " + val)
+      // console.log("now mode = " + this.mode)
       if (this.mode !== val) {
         this.mode = val;
         if (val == 1) { // val和1的类型不一致，这里需要使用==而不是===

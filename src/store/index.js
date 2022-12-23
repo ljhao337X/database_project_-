@@ -12,6 +12,13 @@ export default new Vuex.Store({
             id: '',
             nickname: '',
             avatar: ''
+        },
+        // 为了常驻
+        is_admin_login: false,
+        admin: {
+            id: '',
+            nickname: '',
+            avatar: ''
         }
     },
     getters: {},
@@ -27,6 +34,19 @@ export default new Vuex.Store({
         },
         logout(state) {
             state.is_login = false;
+        },
+        // 管理员使用
+        set_admin_nickname(state, token) {
+            state.admin.nickname = token;
+        },
+        set_admin_is_login(state, is_login) {
+            state.is_admin_login = is_login;
+        },
+        set_admin(state, admin) {
+            state.admin = admin;
+        },
+        admin_logout(state) {
+            state.is_admin_login = false;
         }
     },
     actions: {},
