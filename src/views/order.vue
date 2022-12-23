@@ -6,9 +6,12 @@
         <div class="idle-info-container" @click="toDetails(order.idle.id)">
           <el-image
               style="width: 150px; height: 150px;"
-              :src="order.idle.imgUrl"
+              :src="order.idle.picture1"
               fit="cover"></el-image>
-          <div class="order-info-title">{{ order.user.id == user.id ? '买到的' : '卖出的' }}：{{ order.idle.name }}</div>
+          <div class="order-info-title">{{ order.buyer.id == visitor.id ? '买到的' : '卖出的' }}：{{
+              order.idle.name
+            }}
+          </div>
           <div class="idle-info-price">￥{{ order.idle.price }}</div>
 
         </div>
@@ -28,17 +31,14 @@
           </div>
         </div>
         <div class="menu">
-          <el-button v-if="user.id==order.user.id&&order.status===0" type="danger" plain
-                     @click="changeOrderStatus(4,order)">取消订单
+          <el-button v-if="visitor.id==order.buyer.id&&order.status===0" type="danger" plain
+                     @click="changeOrderStatus(3,order)">取消订单
           </el-button>
-          <el-button v-if="user.id==order.user.id&&order.status===0" type="primary" plain
-                     @click="changeOrderStatus(1,order)">立即支付
+          <el-button v-if="visitor.id==order.buyer.id&&order.status===0" type="primary" plain
+                     @click="changeOrderStatus(2,order)">立即支付
           </el-button>
-          <el-button v-if="user.id==order.idle.user.id&&order.status===1" type="primary" plain
-                     @click="changeOrderStatus(2,order)">发货
-          </el-button>
-          <el-button v-if="user.id==order.user.id&&order.status===2" type="primary" plain
-                     @click="changeOrderStatus(3,order)">确认收货
+          <el-button v-if="visitor.id==order.user.id&&order.status===1" type="primary" plain
+                     @click="changeOrderStatus(1,order)">确认交付
           </el-button>
         </div>
       </div>
@@ -68,28 +68,57 @@ export default {
         paymentTime: '121',
         createTime: '12.12.112',
         status: 1,
-        user: {
-          id: '1212'
-        },
         idle: {
           id: '1212',
           name: 'second-hand phone',
-          imgUrl: '',
-          price: 1212,
-          user: {id: '1111'}
+          picture1: '',
+          price: 1212
+        },
+        user: {id: '1111'},
+        buyer: {
+          id: '1111'
         }
       },
-      user: {
-        id: '1111'
+      visitor: {
+        id: ''
       }
     }
   },
+  created() {
+    if (this.$store.state.is_login) {
+      this.visitor = this.$store.state.user;
+      this.getOrderInfo(this.$route.query.id);
+    } else {
+      this.$router.push('login');
+    }
+  },
   methods: {
+    getOrderInfo(orderId) {
+      this.$api.getOrder({id: orderId}).then(res => {
+        if (res.status_code == 1) {
+          this.order = res.data;
+        }
+      })
+    },
     toDetails(id) {
-
+      this.$router.push({path: '\details', query: {id: id}});
     },
     changeOrderStatus(to, order) {
-
+      this.$api.updateOrder({id: order.id, to: to}).then(res => {
+        if (res.status_code == 1) {
+          if (to == 1) {
+            this.$message.info('交付成功，等待付款');
+          } else if (to == 2) {
+            this.$message.info('付款成功，交易完成');
+          }
+        } else {
+          if (to == 1) {
+            this.$message.error('交付失败，请联系管理员');
+          } else if (to == 2) {
+            this.$message.error('付款失败，请联系管理员');
+          }
+        }
+      })
     }
   }
 }

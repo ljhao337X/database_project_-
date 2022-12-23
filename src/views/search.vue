@@ -1,18 +1,10 @@
 <template>
   <div>
-    <app-head></app-head>
+    <app-head :searchInput="searchValue"></app-head>
     <app-body>
       <div style="min-height: 85vh;">
-        <!-- 这是上层显示的一些分类-->
-        <el-tabs v-model="labelName" type="card" @tab-click="handleClick">
-          <el-tab-pane label="全部" name="0"></el-tab-pane>
-          <el-tab-pane label="数码" name="1"></el-tab-pane>
-          <el-tab-pane label="家电" name="2"></el-tab-pane>
-          <el-tab-pane label="户外" name="3"></el-tab-pane>
-          <el-tab-pane label="图书" name="4"></el-tab-pane>
-          <el-tab-pane label="其他" name="5"></el-tab-pane>
-        </el-tabs>
-        <div style="margin: 0 20px;">
+        <div style="margin: 0 20px;padding-top: 20px;">
+          <div style="text-align: center;color: #555555;padding: 20px;" v-if="idleList.length===0">暂无匹配的闲置物品</div>
           <el-row :gutter="30">
             <el-col :span="6" v-for="(item,index) in idleList">
               <div class="idle-card" @click="toDetails(item.idle)">
@@ -25,14 +17,14 @@
                   </div>
                 </el-image>
                 <div class="idle-title">
-                  {{ item.idle.name }}
+                  {{item.idle.name}}
                 </div>
                 <el-row style="margin: 5px 10px;">
                   <el-col :span="12">
-                    <div class="idle-prive">￥{{ item.idle.price }}</div>
+                    <div class="idle-prive">￥{{item.idle.price}}</div>
                   </el-col>
                 </el-row>
-                <div class="idle-time">{{ item.idle.details }}</div>
+                <div class="idle-time">{{item.idle.details}}</div>
                 <div class="user-info">
                   <el-image
                       style="width: 30px; height: 30px"
@@ -42,7 +34,7 @@
                       <i class="el-icon-picture-outline">无图</i>
                     </div>
                   </el-image>
-                  <div class="user-nickname">{{ item.user.nickname }}</div>
+                  <div class="user-nickname">{{item.user.nickname}}</div>
                 </div>
               </div>
             </el-col>
@@ -65,13 +57,12 @@
 </template>
 
 <script>
-
-import AppHead from '../components/AppHeader.vue';
-import AppBody from '../components/AppPageBody.vue'
-import AppFoot from '../components/AppFoot.vue'
+import AppHead from "@/components/AppHeader";
+import AppBody from "@/components/AppPageBody";
+import AppFoot from "@/components/AppFoot";
 
 export default {
-  name: "index",
+  name: "search",
   components: {
     'app-head': AppHead,
     'app-body': AppBody,
@@ -79,7 +70,6 @@ export default {
   },
   data() {
     return {
-      labelName: 0,
       idleList: [{
         idle: {
           id: 0,
@@ -97,56 +87,31 @@ export default {
       }],
       currentPage: 1,
       totalItem: 8
-    };
+    }
   },
   created() {
-    if (this.$route.query.page) {
-      this.currentPage = this.$route.query.page;
-      this.labelName = this.$route.query.labelName;
-    }
-    console.log(this.currentPage)
-    this.findIdle()
+    let searchStr = this.$route.query.str;
+    this.$api.findIdleByLabel({
+      str: searchStr,
+      page: this.currentPage,
+      num: 8
+    }).then(res => {
+      //console.log(res);
+      this.idleList = res.data;
+      this.totalItem = res.data.count;
+      //console.log(this.totalItem);
+    }).catch(e => {
+      console.log(e)
+    })
   },
-
   methods: {
-    findIdle() {
-      //抄的别人的加载方法
-      const loading = this.$loading({
-        lock: true,
-        text: '加载数据中',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0)'
-      });
-      loading.lock = false;
-      this.$api.findIdleByLabel({
-        idleLabel: this.labelName,
-        page: this.currentPage,
-        nums: 8
-      }).then(res => {
-        console.log(res);
-        this.idleList = res.data;
-        this.totalItem = res.data.count;
-        console.log(this.totalItem);
-      }).catch(e => {
-        console.log(e)
-      }).finally(() => {
-        loading.close();
-      })
-
-    },
-    handleClick(tab, event) {
-      console.log(this.labelName);
-      //强制回到第一页
-      this.currentPage = 1;
-      this.findIdle();
+    toDetails(idle) {
+      this.$router.push({path: '/details', query: {id:idle.id}});
     },
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
       this.findIdle();
     },
-    toDetails(idle) {
-      this.$router.push({path: '/details', query: {id: idle.id}});
-    }
   }
 }
 </script>

@@ -50,7 +50,20 @@ const api = {
             params: query
         });
     },
-
+    getMyBuying(query) {
+        return request({
+            url: '/user/buying',
+            method: 'get',
+            params: query
+        });
+    },
+    searchIdle(query) {
+        return request({
+            url: '/idle/search',
+            method: 'get',
+            params: query
+        });
+    },
     getAllIdle(query) {
         return request({
             url: '/idle/all',
@@ -87,10 +100,24 @@ const api = {
             params: query
         })
     },
-
+    //------------以下为order相关接口------------
     addOrder(query) {
         return request({
             url: '/order/add',
+            method: 'get',
+            params: query
+        })
+    },
+    updateOrder(query) {
+        return request({
+            url: '/order/update',
+            method: 'get',
+            params: query
+        })
+    },
+    getOrder(query) {
+        return request({
+            url: '/order/update',
             method: 'get',
             params: query
         })

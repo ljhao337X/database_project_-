@@ -22,16 +22,16 @@
       </div>
       <div class="idle-container">
         <el-tabs v-model="activeName" @tab-click="handleClick">
-          <el-tab-pane label="我发布的" name="post"></el-tab-pane>
-          <el-tab-pane label="我卖出的" name="sold"></el-tab-pane>
+          <el-tab-pane label="我发布的" name="0"></el-tab-pane>
+          <el-tab-pane label="我卖出的" name="1"></el-tab-pane>
         </el-tabs>
         <div class="idle-container-list">
-          <div v-for="item in idleList" class="idle-container-list-item">
+          <div v-for="item in idleList[activeName]" class="idle-container-list-item">
             <div class="idle-container-list-item-detail" @click="toDetails(activeName,item)">
               <!--              依次是图片、价格（状态）、介绍、和下架按钮。-->
               <el-image
                   style="width: 100px; height: 100px;"
-                  :src="item.imgUrl"
+                  :src="item.idle.picture1"
                   fit="cover">
                 <div slot="error" class="image-slot">
                   <i class="el-icon-picture-outline">无图</i>
@@ -39,20 +39,20 @@
               </el-image>
               <div class="idle-container-list-item-text">
                 <div class="idle-container-list-title">
-                  {{ item.name }}
+                  {{ item.idle.name }}
                 </div>
-                <div class="idle-container-list-idle-details" v-html="item.details">
-                  {{ item.details }}
+                <div class="idle-container-list-idle-details" v-html="item.idle.details">
+                  {{ item.idle.details }}
                 </div>
                 <div class="idle-item-foot">
-                  <div class="idle-prive">￥{{ item.price }}
-                    {{ (activeName === 'post') ? '待出售' : (activeName === 'sold') ? '已出售' : '已下架' }}
+                  <div class="idle-prive">￥{{ item.idle.price }}
+                    {{ (activeName === '0') ? '待出售' : (activeName === '1') ? '已出售' : '已下架' }}
                   </div>
-                  <el-button v-if="activeName==='post'" type="danger" size="mini" slot="reference"
+                  <el-button v-if="activeName==='0'" type="danger" size="mini" slot="reference"
                              plain @click.stop="handle(activeName,item,index)">
                     举报
                   </el-button>
-                  <el-button v-else-if="activeName==='sold'" type="primary" size="mini" slot="reference"
+                  <el-button v-else-if="activeName==='1'" type="primary" size="mini" slot="reference"
                              plain @click.stop="handle(activeName,item,index)">
                     查看订单
                   </el-button>
@@ -82,44 +82,53 @@ export default {
   data() {
     return {
       imgFileList: [],
-      activeName: 'post',
+      activeName: '0',
       handleName: ['下架', '删除', '取消收藏', '', ''],
       orderStatus: ['待付款', '待发货', '待收货', '已完成', '已取消'],
 
       selectedOptions: [],//存放默认值
       user: {
-        id: '2037924',
-        nickname: 'Danny',
-        avatar: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png'
+        id: '',
+        nickname: '',
+        avatar: ''
       },
-      idleList: [{
-        id: '121',
-        imgUrl: null,
-        name: 'second-hand phone',
-        price: '1100',
-        details: 'this is amazing',
+      idleList: [[{
+        idle: {
+          id: '',
+          picture1: '',
+          name: '',
+          price: '',
+          details: '',
+        },
         user: {
-          avatar: null,
+          avatar: '',
           nickname: 'danny',
         }
-      }],
+      }], [],],
+
+      visitor: {
+        id: ''
+      }
     };
   },
   created() {
-    if (!this.$globalData.userInfo.nickname) {
+    if (this.$store.state.is_login) {
       this.$api.getUserInfo({
-        id: this.$router.query.userId
+        id: this.$route.query.userId
       }).then(res => {
         if (res.status_code === 1) {
-          this.$globalData.userInfo = res.data;
-          this.userInfo = this.$globalData.userInfo;
+          //返回当前查询的主页用户的信息
+          this.user = res.data;
+          console.log('找到用户');
+          console.log(res.data);
+          this.getMyIdle();
+          this.activeName = '0';
         }
       })
     } else {
-      this.userInfo = this.$globalData.userInfo;
-      console.log(this.userInfo);
+      this.$message.error('请先登录');
+      this.$router.push('login');
     }
-    this.getMyIdle();
   },
   methods: {
     fileHandleSuccess(response, file, fileList) {
@@ -135,15 +144,21 @@ export default {
     handleClick(tab, event) {
       //null
     },
-    getMySoldIdle() {
-      for (let i = 0; i <= 2; i++) {
-        this.$api.getMyIdle({id: this.user.id, status: i}).then(res => {
+    getMyIdle() {
+      console.log('用户', this.user)
+      for (let index = 0; index <= 1; index++) {
+        this.$api.getMyIdle({
+          id: this.user.id,
+          status: index
+        }).then(res => {
+          console.log(res);
           if (res.status_code === 1) {
-            console.log('getMySoldIdle', res.data);
-            this.idleList[i] = res.data;
+            this.idleList[index] = res.data;
           }
+          console.log('已经找到idle')
         })
       }
+      console.log(this.idleList);
 
     },
   }

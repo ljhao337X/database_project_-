@@ -10,14 +10,6 @@ module.exports = {
                 pathRewrite: {
                     '^/api': ''
                 }
-            },
-            "/img": {
-                target: 'https://sm.ms',
-                changeOrigin: true,
-                secure: false,
-                headers: {
-                    Referer: 'https://sm.ms'
-                }
             }
         }
     }

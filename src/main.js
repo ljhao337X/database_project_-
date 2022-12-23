@@ -10,7 +10,6 @@ import axios from "axios";
 Vue.prototype.$store = store;
 Vue.prototype.$api = api;
 Vue.prototype.$axios = axios;
-axios.defaults.baseURL = '/img';
 Vue.use(ElementUI, {
     size: 'large'
 });

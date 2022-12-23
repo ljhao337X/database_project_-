@@ -91,6 +91,13 @@ const routes = [
     component: function (){
       return import('../views/profile.vue')
     }
+  },
+  {
+    path: '/search',
+    name: 'search',
+    component: function (){
+      return import('../views/search.vue')
+    }
   }
 
 ]

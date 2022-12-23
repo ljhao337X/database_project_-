@@ -61,18 +61,18 @@
       </div>
       <div class="idle-container">
         <el-tabs v-model="activeName" @tab-click="handleClick">
-          <el-tab-pane label="我发布的" name="post"></el-tab-pane>
-          <el-tab-pane label="我卖出的" name="sold"></el-tab-pane>
-          <el-tab-pane label="已下架的" name="offline"></el-tab-pane>
-          <el-tab-pane label="正在进行" name="order"></el-tab-pane>
+          <el-tab-pane label="我发布的" name="0"></el-tab-pane>
+          <el-tab-pane label="我卖出的" name="1"></el-tab-pane>
+          <el-tab-pane label="已下架的" name="2"></el-tab-pane>
+          <el-tab-pane label="正在进行" name="3"></el-tab-pane>
         </el-tabs>
         <div class="idle-container-list">
-          <div v-for="item in idleList" class="idle-container-list-item">
+          <div v-for="item in idleList[activeName]" class="idle-container-list-item">
             <div class="idle-container-list-item-detile" @click="toDetails(activeName,item)">
               <!--              依次是图片、价格（状态）、介绍、和下架按钮。-->
               <el-image
                   style="width: 100px; height: 100px;"
-                  :src="item.idle.imgUrl"
+                  :src="item.idle.picture1"
                   fit="cover">
                 <div slot="error" class="image-slot">
                   <i class="el-icon-picture-outline">无图</i>
@@ -87,17 +87,17 @@
                 </div>
                 <div class="idle-item-foot">
                   <div class="idle-prive">￥{{ item.idle.price }}
-                    {{ (activeName === 'post') ? '待出售' : (activeName === 'sold') ? '已出售' : '已下架' }}
+                    {{ (activeName === '0') ? '待出售' : (activeName === '1') ? '已出售' : '已下架' }}
                   </div>
-                  <el-button v-if="activeName==='post'" type="danger" size="mini" slot="reference"
+                  <el-button v-if="activeName==='0'" type="danger" size="mini" slot="reference"
                              plain @click.stop="handle(activeName,item,index)">
                     下架
                   </el-button>
-                  <el-button v-else-if="activeName==='sold'" type="primary" size="mini" slot="reference"
+                  <el-button v-else-if="activeName==='1'" type="primary" size="mini" slot="reference"
                              plain @click.stop="handle(activeName,item,index)">
                     查看订单
                   </el-button>
-                  <el-button v-else-if="activeName==='offline'" type="success" size="mini" slot="reference"
+                  <el-button v-else-if="activeName==='4'" type="success" size="mini" slot="reference"
                              :disabled="false">恢复上架
                   </el-button>
                 </div>
@@ -127,8 +127,9 @@ export default {
   data() {
     return {
       imgFileList: [],
-      activeName: 'post',
+      activeName: '0',
       statusName: ['我发布的', '我卖出的', '已下架的', '正在进行'],
+      statusToInt: {'我发布的': 0, '我卖出的': 1, '已下架的': 2, '正在进行': 3},
       handleName: ['下架', '删除', '取消收藏', '', ''],
       orderStatus: ['待付款', '待发货', '待收货', '已完成', '已取消'],
 
@@ -150,10 +151,10 @@ export default {
         nickname: '',
         avatar: ''
       },
-      idleList: [{
+      idleList: [[{
         idle: {
           id: '121',
-          imgUrl: null,
+          picture1: '',
           name: 'second-hand phone',
           price: '1100',
           details: 'this is amazing',
@@ -162,24 +163,25 @@ export default {
           avatar: 'https://database-project.oss-cn-zhangjiakou.aliyuncs.com/2.jpg',
           nickname: 'danny',
         }
-      }],
+      }], [], [], []]
     };
   },
   created() {
     if (this.$store.state.is_login) {
-      console.log('已经登录');
       //console.log(this.$store.state);
       let userId = this.$store.state.user.id;
       this.$api.getUserInfo({id: userId})
           .then(res => {
             this.user = res.data;
+            console.log('已经登录');
+            console.log(this.user)
             this.user_new.nickname = this.user.nickname;
-
+            this.getMyIdle();
           })
     } else {
       console.log(this.user);
     }
-    this.getMyIdle();
+
   },
   methods: {
     finishAllEditing() {
@@ -286,19 +288,21 @@ export default {
       //null
     },
     getMyIdle() {
-      console.log('准备找idle')
+      //console.log('准备找idle');
+      //console.log(this.user);
       for (let index = 0; index <= 2; index++) {
         this.$api.getMyIdle({
           id: this.user.id,
-          status: 1
+          status: index
         }).then(res => {
+          console.log(res);
           if (res.status_code === 1) {
-            console.log('getMyIdle', res.data);
             this.idleList[index] = res.data;
           }
           console.log('已经找到idle')
         })
       }
+      console.log(this.idleList);
 
     },
   }

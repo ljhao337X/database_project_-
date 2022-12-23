@@ -14,7 +14,9 @@
       <div style="cursor:pointer;display: flex;align-items: center;">
         <div style="font-size: 16px;color: #409EFF;padding-right: 5px;">{{ nickname }}
         </div>
-        <div class="block"><el-avatar :size="40" :src="avatar"></el-avatar></div>
+        <div class="block">
+          <el-avatar :size="40" :src="avatar"></el-avatar>
+        </div>
       </div>
       <el-dropdown-menu slot="dropdown">
         <el-dropdown-item>
@@ -47,8 +49,8 @@ export default {
     if (!this.$store.state.is_login) {
       this.isLogin = false;
     } else {
-      console.log('header');
-      console.log(this.$store.state.user);
+      //console.log('header');
+      //console.log(this.$store.state.user);
       this.nickname = this.$store.state.user.nickname;
       this.avatar = this.$store.state.user.avatar;
       this.isLogin = true;
@@ -56,7 +58,7 @@ export default {
   },
   methods: {
     searchItems() {
-      window.alert("wrong input");
+      this.$router.push({path: '/search', query: {str: this.searchStr}});
     },
     postAnItem() {
       this.$router.push('newpost')
