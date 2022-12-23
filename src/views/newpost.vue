@@ -26,7 +26,7 @@
               <div style="display: flex; justify-content: space-evenly;">
                 <el-form-item label="类别">
                   <el-radio-group v-model="idle.label">
-                    <el-radio v-for="i in option_index" :label="i">{{ options[i] }}</el-radio>
+                    <el-radio v-for="i in option_index" :label="i">{{ options[i-1] }}</el-radio>
                   </el-radio-group>
                 </el-form-item>
                 <el-form-item label="价格">
@@ -37,27 +37,37 @@
               </div>
               <el-form-item label="上传照片">
                 <el-upload
-                    action="http://localhost:8080/file/"
-                    :on-preview="fileHandlePreview"
-                    :on-remove="fileHandleRemove"
-                    :on-success="fileHandleSuccess"
-                    :show-file-list="showFileList"
-                    :limit="10"
-                    :on-exceed="handleExceed"
-                    accept="image/*"
-                    drag
-                    multiple>
-                  <i class="el-icon-upload"></i>
-                  <div class="el-upload__text">将图片拖到此处，或<em>点击上传</em></div>
+                    action="#"
+                    list-type="picture-card"
+                    :http-request="upload"
+                    :before-upload="beforeUpload"
+                    :auto-upload="true">
+                  <i slot="default" class="el-icon-plus"></i>
+                  <div slot="file" slot-scope="{file}">
+                    <img
+                        class="el-upload-list__item-thumbnail"
+                        :src="file.url" alt="">
+                      <span class="el-upload-list__item-actions">
+                        <span
+                          class="el-upload-list__item-preview"
+                          @click="handlePictureCardPreview(file)">
+                            <i class="el-icon-zoom-in"></i>
+                        </span>
+                        <span
+                          v-if="!disabled"
+                          class="el-upload-list__item-delete"
+                          @click="handleDownload(file)">
+                        <i class="el-icon-download"></i>
+                    </span>
+                      <span
+                          v-if="!disabled"
+                          class="el-upload-list__item-delete"
+                          @click="handleRemove(file)">
+                        <i class="el-icon-delete"></i>
+                      </span>
+                    </span>
+                  </div>
                 </el-upload>
-                <div class="picture-list">
-                  <el-image style="width: 600px;margin-bottom: 2px;" fit="contain"
-                            v-for="(img,index) in imgList" :src="img"
-                            :preview-src-list="imgList"></el-image>
-                </div>
-                <el-dialog :visible.sync="imgDialogVisible">
-                  <img width="100%" :src="dialogImageUrl" alt="">
-                </el-dialog>
               </el-form-item>
               <div style="display: flex;justify-content: center;margin-top: 30px;margin-bottom: 30px;">
                 <el-button type="success" plain @click="postButton">发布</el-button>
@@ -79,6 +89,7 @@ import AppFoot from "@/components/AppFoot";
 import AppHead from "@/components/AppHeader";
 import AppBody from "@/components/AppPageBody";
 import idleList from "@/components/idleList";
+import {put} from "@/utils/zjkalioss";
 
 export default {
   name: "newpost",
@@ -102,11 +113,12 @@ export default {
       //使用index访问类别
       //todo
       //index为1的话会出现错误
-      option_index: [0, 1, 2, 3, 4, 5, 6, 7],
+      option_index: [1, 2, 3, 4, 5, 6, 7, 8],
       options: ['户外', '数码', '家具', '图书', '服装', '饰品', '化妆品', '家居'],
-      imgList: [],
+      imgDialogVisible: false,
       dialogImageUrl: '',
-      imgDialogVisible: false
+      dialogVisible: false,
+      disabled: false
     }
   },
   created() {
@@ -120,6 +132,7 @@ export default {
           this.idle.details &&
           this.idle.label &&
           this.idle.price) {
+
         console.log(this.idle);
         this.$api.addIdle(this.idle).then(res => {
           if (res.status_code === 1) {
@@ -140,6 +153,51 @@ export default {
         this.$message.error('请填写完整信息！');
       }
 
+    },
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url;
+      this.dialogVisible = true;
+    },
+    handleDownload(file) {
+      console.log(file);
+    },
+    upload(item) {
+      let fileName = item.file.name  // 当前本地上传的这张图片的名称(没有时间日期)
+      let date = new Date()
+      let year = date.getFullYear()
+      let month = date.getMonth() + 1
+      month = (month < 10 ? '0' + month : month)
+      let mydate = date.getDate()
+      mydate = (mydate < 10 ? '0' + mydate : mydate)
+      this.baseurl = 'img/' + year + '/' + year + month + '/' + year + month + mydate + '/'
+      // 这里是把时间+图片名称拼接起来形成一个新的图片上传至oss，目的是区别于本地图片的名称，避免名称相同会误删，同时便于查看oss上最新上传图片的时间点
+      let filePath = this.baseurl + new Date().getTime() + '-' + fileName
+
+      let file = item.file // 当前本地上传的这张图片
+
+      put(filePath, file).then(result => {  // 调oss api 上传图片
+        console.log('上传成功');
+        console.log(result);
+        this.idle.picture1 = result.url;
+        })
+    },
+    beforeUpload(file) {
+      const isJPG = file.type === 'image/jpeg';
+      const isLt2M = file.size / 1024 / 1024 < 4;
+
+      if (!isJPG) {
+        this.$message.error('上传头像图片只能是 JPG 格式!');
+      }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 4MB!');
+      }
+      return isJPG && isLt2M;
+    },
+    handleChange(file, fileList) {
+      this.imgList = fileList;
+    },
+    handleRemove(file, fileList) {
+      this.imgList = fileList
     }
   }
 }

@@ -18,7 +18,7 @@
               <div class="idle-card" @click="toDetails(item.idle)">
                 <el-image
                     style="width: 100%; height: 160px"
-                    :src="item.idle.imgUrl"
+                    :src="item.idle.picture1"
                     fit="contain">
                   <div slot="error" class="image-slot">
                     <i class="el-icon-picture-outline">无图</i>
@@ -87,6 +87,7 @@ export default {
           name: 'second-hand phone',
           price: '1100',
           details: 'this is amazing',
+          picture1: '',
         },
         user: {
           id: '',

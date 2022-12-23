@@ -12,9 +12,9 @@
     <router-link v-if="!isLogin" class="user-name-text" to="/login">登录</router-link>
     <el-dropdown v-else trigger="click">
       <div style="cursor:pointer;display: flex;align-items: center;">
-        <div style="font-size: 16px;color: #409EFF;padding-right: 5px;">{{ nicknameValue ? nicknameValue : nickname }}
+        <div style="font-size: 16px;color: #409EFF;padding-right: 5px;">{{ nickname }}
         </div>
-        <el-avatar :src="avatarValue?avatarValue:avatar"></el-avatar>
+        <div class="block"><el-avatar :size="40" :src="avatar"></el-avatar></div>
       </div>
       <el-dropdown-menu slot="dropdown">
         <el-dropdown-item>
@@ -38,7 +38,7 @@ export default {
     return {
       searchStr: '',
       nickname: '游客',
-      avatar: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png',
+      avatar: '',
       isLogin: false
     }
   },
@@ -47,6 +47,8 @@ export default {
     if (!this.$store.state.is_login) {
       this.isLogin = false;
     } else {
+      console.log('header');
+      console.log(this.$store.state.user);
       this.nickname = this.$store.state.user.nickname;
       this.avatar = this.$store.state.user.avatar;
       this.isLogin = true;

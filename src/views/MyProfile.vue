@@ -6,10 +6,9 @@
         <div class="user-info-details">
 
           <el-upload
-              action="http://localhost:8080/file/"
+              action=""
               :http-request="uploadAvatar"
-              :file-list="imgFileList"
-              accept="image/*"
+              :before-upload="beforeAvatarUpload"
           >
             <el-image
                 style="width: 120px; height: 120px;border-radius: 10px;"
@@ -116,6 +115,7 @@
 import AppFoot from "@/components/AppFoot";
 import AppHead from "@/components/AppHeader";
 import AppBody from "@/components/AppPageBody";
+import {client, put, remove} from '../utils/zjkalioss.js';
 
 export default {
   name: "MyProfile",
@@ -128,7 +128,7 @@ export default {
     return {
       imgFileList: [],
       activeName: 'post',
-      statusName: ['我发布的','我卖出的', '已下架的', '正在进行'],
+      statusName: ['我发布的', '我卖出的', '已下架的', '正在进行'],
       handleName: ['下架', '删除', '取消收藏', '', ''],
       orderStatus: ['待付款', '待发货', '待收货', '已完成', '已取消'],
 
@@ -141,13 +141,13 @@ export default {
       userPassword3: '',
       selectedOptions: [],//存放默认值
       user: {
-        id: '2037924',
-        nickname: 'Danny',
-        avatar: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png',
+        id: '',
+        nickname: '',
+        avatar: '',
         password: ''
       },
       user_new: {
-        nickname: 'Danny',
+        nickname: '',
         avatar: ''
       },
       idleList: [{
@@ -159,7 +159,7 @@ export default {
           details: 'this is amazing',
         },
         user: {
-          avatar: null,
+          avatar: 'https://database-project.oss-cn-zhangjiakou.aliyuncs.com/2.jpg',
           nickname: 'danny',
         }
       }],
@@ -168,9 +168,10 @@ export default {
   created() {
     if (this.$store.state.is_login) {
       console.log('已经登录');
+      //console.log(this.$store.state);
       let userId = this.$store.state.user.id;
-      this.$api.getUserInfo({id:userId})
-          .then(res=>{
+      this.$api.getUserInfo({id: userId})
+          .then(res => {
             this.user = res.data;
             this.user_new.nickname = this.user.nickname;
 
@@ -187,7 +188,7 @@ export default {
           nickname: this.user_new.nickname,
           id: this.user.id
         }).then(res => {
-          this.$globalData.userInfo.nickname = this.user_new.nickname;
+          this.$store.commit("set_nickname", this.user_new.nickname);
           this.user.nickname = this.user_new.nickname;
         })
       }
@@ -229,21 +230,50 @@ export default {
     fileHandleSuccess(response, file, fileList) {
 
     },
-    uploadAvatar(file){
-      const formData = new FormData();
-      formData.append('smfile', file.file);
-      this.$axios.post('/v2/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'Authorization': 'XE1VgA0EoE4f3BzoPttqqZ1s4e44xLpm'
-        }
-      }, { timeout: 30000 }).then(res => {
-        if (res.data.code === 'image_repeated') {
-          this.userInfo.avatar = res.data.images;
-        } else {
-          this.userInfo.avatar = res.data.data.url;
-        }
+    uploadAvatar(item) {
+      let fileName = item.file.name  // 当前本地上传的这张图片的名称(没有时间日期)
+      let date = new Date()
+      let year = date.getFullYear()
+      let month = date.getMonth() + 1
+      month = (month < 10 ? '0' + month : month)
+      let mydate = date.getDate()
+      mydate = (mydate < 10 ? '0' + mydate : mydate)
+      this.baseurl = 'img/' + year + '/' + year + month + '/' + year + month + mydate + '/'
+      // 这里是把时间+图片名称拼接起来形成一个新的图片上传至oss，目的是区别于本地图片的名称，避免名称相同会误删，同时便于查看oss上最新上传图片的时间点
+      let filePath = this.baseurl + new Date().getTime() + '-' + fileName
+
+      let file = item.file // 当前本地上传的这张图片
+      put(filePath, file).then(result => {  // 调oss api 上传图片
+        console.log(result)
+        this.user.avatar = result.url;
+        this.$api.uploadAvatar({
+          id: this.user.id,
+          avatar: this.user.avatar
+        }).then(res => {
+          if (res.status_code === 1) {
+            this.$message({
+              message: '修改成功！',
+              type: 'success'
+            });
+          } else {
+            this.$message.error('修改失败！');
+          }
+        })
+        // 文件上传成功后，获取返回值中的文件名name，并把其放入fileList数组中，表示当前已上传的文件
+        //this.fileList.push(result.name)
       })
+    },
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === 'image/jpeg';
+      const isLt2M = file.size / 1024 / 1024 < 2;
+
+      if (!isJPG) {
+        this.$message.error('上传头像图片只能是 JPG 格式!');
+      }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!');
+      }
+      return isJPG && isLt2M;
     },
     toDetails(activeName, item) {
       if (activeName == 'post') {

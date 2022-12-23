@@ -14,10 +14,10 @@
         <div class="details-header-buy" :style="'width:'+(isMaster?'150px;':'280px;')">
           <div style="color: red;font-size: 18px;font-weight: 600;">￥{{ idle.price }}</div>
           <div v-if="!isMaster&&idle.status!==0" style="color: red;font-size: 16px;">闲置已下架或删除</div>
-          <el-button v-if="!isMaster&&idle.status===0" type="danger" plain @click="buyButton(idle)">立即购买</el-button>
-          <el-button v-if="!isMaster&&idle.status===1" type="danger" plain @click="buyButton(idle)">查看订单</el-button>
-          <el-button v-if="isMaster&&idle.status===0" type="danger" @click="changeStatus(idle,2)" plain>下架</el-button>
-          <el-button v-if="isMaster&&idle.status===2" type="primary" @click="changeStatus(idle,1)" plain>重新上架
+          <el-button v-if="!isMaster&&idle.status==='0'" type="danger" plain @click="buyButton(idle)">立即购买</el-button>
+          <el-button v-if="!isMaster&&idle.status==='1'" type="danger" plain @click="buyButton(idle)">查看订单</el-button>
+          <el-button v-if="isMaster&&idle.status==='0'" type="danger" @click="changeStatus(idle,2)" plain>下架</el-button>
+          <el-button v-if="isMaster&&idle.status==='2'" type="primary" @click="changeStatus(idle,1)" plain>重新上架
           </el-button>
         </div>
       </div>
@@ -27,9 +27,9 @@
           {{ idle.details }}
         </div>
         <div class="details-picture">
-          <el-image v-for="(imgUrl,i) in idle.picList"
+          <el-image
                     style="width: 90%;margin-bottom: 2px;"
-                    :src=imgUrl
+                    :src=idle.picture1
                     fit="contain"></el-image>
         </div>
       </div>
@@ -60,15 +60,17 @@ export default {
         name: 'second-hand-phone',
         status: 0,
         details: 'this is amazing',
-        picList: [],
+        picture1: '',
+        picture2: '',
+        picture3: '',
       },
       user: {
-        id: '1',
+        id: '',
         avatar: '',
-        nickname: 'Danny'
+        nickname: ''
       },
       visitor: {
-        id: '1'
+        id: ''
       }
     }
   },

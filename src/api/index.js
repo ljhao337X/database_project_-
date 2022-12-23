@@ -29,6 +29,13 @@ const api = {
             params: query
         });
     },
+    uploadAvatar(query) {
+        return request({
+            url: '/user/avatar',
+            method: 'get',
+            params: query
+        });
+    },
     updatePassword(query) {
         return request({
             url: '/user/updatePassword',
@@ -75,7 +82,7 @@ const api = {
 
     updateIdle(query) {
         return request({
-            url: '/order/update',
+            url: '/idle/update',
             method: 'get',
             params: query
         })

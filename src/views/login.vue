@@ -63,15 +63,16 @@ export default {
             // 正常登录
             if (res.data.type === '管理员') {
               // 管理员，跳转到admin界面
-              this.$globalData.userInfo = res.data;
               this.$router.replace({path: '/admin'})
               // 需要额外维护的两个信息
               this.$sta.isLogin = true;
               this.$sta.adminName = res.data.nickname;
             } else {
               // 一般用户，跳转到index界面
+              console.log('成功登录');
+              console.log(res.data);
               this.$store.commit('set_is_login', true);
-              this.$store.commit('set_user_info', res.data);
+              this.$store.commit('set_user', res.data);
               this.$router.replace({path: '/index'});
             }
           } else {

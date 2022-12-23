@@ -16,11 +16,14 @@ export default new Vuex.Store({
     },
     getters: {},
     mutations: {
-        set_token(state, token) {
-            state.token = token;
+        set_nickname(state, token) {
+            state.user.nickname = token;
         },
         set_is_login(state, is_login) {
             state.is_login = is_login;
+        },
+        set_user(state, user) {
+            state.user = user;
         },
         logout(state) {
             state.is_login = false;
