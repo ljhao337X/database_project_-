@@ -12,6 +12,9 @@
           <div class="app-logOut">
             <el-button style="margin-right: 100px" type="primary" @click="logout">退出登录</el-button>
           </div>
+          <div class="app-logOut">
+            <el-button style="margin-right: 100px" type="primary" @click="jumpToMyProfile">个人主页</el-button>
+          </div>
         </div>
       </el-header>
 
@@ -86,12 +89,17 @@ export default {
     this.admin.nickname = this.$store.state.admin.nickname;
   },
   methods: {
-    // 登出的函数
     logout() {
+      // 登出的函数
       this.$store.commit('set_admin_is_login', false);
       this.$store.commit('set_admin_nickname', "");
       // 如果登出，会跳转到index界面
       this.$router.push({path: '/index'});
+    },
+
+    jumpToMyProfile() {
+      // 跳转到个人主页
+      this.$router.push({path: '/myProfile'});
     },
 
     handleSelect(val) {
