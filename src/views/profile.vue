@@ -177,6 +177,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  background-color: #FFFFFF;
 }
 
 .user-info-details {

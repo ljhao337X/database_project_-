@@ -2,9 +2,9 @@
   <div>
     <app-head></app-head>
     <app-body>
-      <div style="min-height: 85vh;">
+      <div style="background-color: #FFFFFF">
         <!-- 这是上层显示的一些分类-->
-        <el-tabs v-model="labelName" type="card" @tab-click="handleClick">
+        <el-tabs v-model="labelName" type="border-card" @tab-click="handleClick">
 <!--          options: ['户外', '数码', '居家', '图书', '服装', '饰品', '化妆品'],-->
           <el-tab-pane label="全部" name="0"></el-tab-pane>
           <el-tab-pane label="户外" name="1"></el-tab-pane>
@@ -14,54 +14,54 @@
           <el-tab-pane label="服装" name="5"></el-tab-pane>
           <el-tab-pane label="饰品" name="6"></el-tab-pane>
           <el-tab-pane label="化妆品" name="7"></el-tab-pane>
-
-        </el-tabs>
-        <div style="margin: 0 20px;">
-          <el-row :gutter="30">
-            <el-col :span="6" v-for="(item,index) in idleList">
-              <div class="idle-card" @click="toDetails(item.idle)">
-                <el-image
-                    style="width: 100%; height: 160px"
-                    :src="item.idle.picture1"
-                    fit="contain">
-                  <div slot="error" class="image-slot">
-                    <i class="el-icon-picture-outline">无图</i>
-                  </div>
-                </el-image>
-                <div class="idle-title">
-                  {{ item.idle.name }}
-                </div>
-                <el-row style="margin: 5px 10px;">
-                  <el-col :span="12">
-                    <div class="idle-prive">￥{{ item.idle.price }}</div>
-                  </el-col>
-                </el-row>
-                <div class="idle-time">{{ item.idle.details }}</div>
-                <div class="user-info">
+          <div style="margin: 0 20px;">
+            <el-row :gutter="30">
+              <el-col :span="6" v-for="(item,index) in idleList">
+                <div class="idle-card" @click="toDetails(item.idle)">
                   <el-image
-                      style="width: 30px; height: 30px"
-                      :src="item.user.avatar"
+                      style="width: 100%; height: 160px; border-radius:10px"
+                      :src="item.idle.picture1"
                       fit="contain">
                     <div slot="error" class="image-slot">
                       <i class="el-icon-picture-outline">无图</i>
                     </div>
                   </el-image>
-                  <div class="user-nickname">{{ item.user.nickname }}</div>
+                  <div class="idle-title">
+                    {{ item.idle.name }}
+                  </div>
+                  <el-row style="margin: 5px 10px;">
+                    <el-col :span="12">
+                      <div class="idle-prive">￥{{ item.idle.price }}</div>
+                    </el-col>
+                  </el-row>
+                  <div class="idle-time">{{ item.idle.details }}</div>
+                  <div class="user-info">
+                    <el-image
+                        style="width: 30px; height: 30px"
+                        :src="item.user.avatar"
+                        fit="contain">
+                      <div slot="error" class="image-slot">
+                        <i class="el-icon-picture-outline">无图</i>
+                      </div>
+                    </el-image>
+                    <div class="user-nickname">{{ item.user.nickname }}</div>
+                  </div>
                 </div>
-              </div>
-            </el-col>
-          </el-row>
-        </div>
-        <div class="fenye">
-          <el-pagination
-              background
-              @current-change="handleCurrentChange"
-              :current-page.sync="currentPage"
-              :page-size="8"
-              layout="prev, pager, next, jumper"
-              :total="totalItem">
-          </el-pagination>
-        </div>
+              </el-col>
+            </el-row>
+          </div>
+          <div class="fenye">
+            <el-pagination
+                background
+                @current-change="handleCurrentChange"
+                :current-page.sync="currentPage"
+                :page-size="8"
+                layout="prev, pager, next, jumper"
+                :total="totalItem">
+            </el-pagination>
+          </div>
+        </el-tabs>
+
       </div>
       <app-foot></app-foot>
     </app-body>
@@ -161,6 +161,7 @@ export default {
   border: #eeeeee solid 1px;
   margin-bottom: 15px;
   cursor: pointer;
+  border-radius: 10px;
 }
 
 .fenye {

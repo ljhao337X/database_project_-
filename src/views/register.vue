@@ -82,7 +82,7 @@ export default {
   align-items: center;
   height: 100vh;
   width: 100%;
-  background-color: #f1f1f1;
+  background: url(../assets/backgroud.jpg) -60px -60px;
 }
 
 .register-input {

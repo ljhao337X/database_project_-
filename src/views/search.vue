@@ -2,7 +2,7 @@
   <div>
     <app-head></app-head>
     <app-body>
-      <div style="min-height: 85vh;">
+      <div style="min-height:90vh;background-color: #FFFFFF">
         <div style="margin: 0 20px;padding-top: 20px;">
           <div style="text-align: center;color: #555555;padding: 20px;" v-if="idleList.length===0">暂无匹配的闲置物品</div>
           <el-row :gutter="30">

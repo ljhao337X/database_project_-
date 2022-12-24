@@ -8,20 +8,20 @@
 
 <script>
 export default {
-  name: "AppPageBody"
+  name: "PageBody"
 }
 </script>
 
 <style scoped>
-.main-container {
+.main-container{
   margin-top: 67px;
   display: flex;
   justify-content: center;
+  background: url(../assets/backgroud.jpg) repeat-y;
 }
-
-.main-content {
+.main-content{
   width: 1000px;
-  background-color: #ffffff;
+  background:rgba(233, 233, 235, 0.8);
   min-height: 90vh;
 }
 </style>

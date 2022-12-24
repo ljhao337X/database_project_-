@@ -1,7 +1,7 @@
 <template>
   <div class="header">
     <div class="app-name">
-      <router-link to="/">北航二手交易平台</router-link>
+      <router-link to="/">BHT北航二手交易网站</router-link>
     </div>
     <div class="search-container">
       <el-input placeholder="我想搜..." v-model="searchStr">

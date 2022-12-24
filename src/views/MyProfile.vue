@@ -87,7 +87,7 @@
                 </div>
                 <div class="idle-item-foot">
                   <div class="idle-prive">￥{{ item.idle.price }}
-                    {{idleStatus[activeName]}}
+                    {{(item.idle.status=='已出售')? '已结束':idleStatus[activeName]}}
                   </div>
                   <el-button v-if="activeName==='0'" type="danger" size="mini" slot="reference"
                              plain @click.stop="handle(activeName,item,index)">
@@ -246,6 +246,7 @@ export default {
       put(filePath, file).then(result => {  // 调oss api 上传图片
         console.log(result)
         this.user.avatar = result.url;
+        this.$store.commit('set_user', this.user);
         this.$api.uploadAvatar({
           id: this.user.id,
           avatar: this.user.avatar
@@ -320,6 +321,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  background-color: #FFFFFF;
 }
 
 .user-info-details {

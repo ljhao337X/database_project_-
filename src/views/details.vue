@@ -35,7 +35,7 @@
           {{ idle.details }}
         </div>
         <div class="details-picture">
-          <el-image v-if="idle.picture1!=='picture1'"
+          <el-image v-if="idle.picture1!==''"
                     style="width: 90%;margin-bottom: 2px;"
                     :src=idle.picture1
                     fit="contain"></el-image>
@@ -181,6 +181,7 @@ export default {
   justify-content: space-between;
   padding: 20px;
   align-items: center;
+  background-color: #FFFFFF
 }
 
 .details-header-user-info {

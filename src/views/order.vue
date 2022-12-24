@@ -8,11 +8,14 @@
               style="width: 150px; height: 150px;"
               :src="idle.picture1"
               fit="cover"></el-image>
-          <div class="order-info-title">{{ order.buyer_id == visitor.id ? '买到的' : '卖出的' }}：{{
-              idle.name
-            }}
+          <div class="order-info">
+            <div class="order-info-title">{{ order.buyer_id == visitor.id ? '买到的' : '卖出的' }}：{{
+                idle.name
+              }}
+            </div>
+            <div class="idle-info-price">￥{{ idle.price }}</div>
           </div>
-          <div class="idle-info-price">￥{{ idle.price }}</div>
+
 
         </div>
         <div class="order-info-container">
@@ -170,15 +173,15 @@ export default {
 
 <style scoped>
 .order-page {
-  min-height: 85vh;
+  width: 100%;
 }
 
 .idle-info-container {
-  width: 100%;
   display: flex;
   border-bottom: 20px solid #f6f6f6;
   padding: 20px;
   cursor: pointer;
+  background-color: #FFFFFF;
 }
 
 .order-info-container {
@@ -196,10 +199,21 @@ export default {
   margin-left: 20px;
 }
 
+.order-info{
+
+}
+
 .order-info-title {
+  padding: 10px;
   font-size: 18px;
   font-weight: 600;
   max-width: 750px;
+}
+.idle-info-price{
+  padding: 10px;
+  text-align: left;
+  font-size: 28px;
+  font-weight: 1200;
 }
 
 </style>

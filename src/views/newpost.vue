@@ -205,7 +205,6 @@ export default {
 
 <style scoped>
 .release-idle-container {
-  min-height: 85vh;
   padding: 30px;
 }
 
