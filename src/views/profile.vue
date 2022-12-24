@@ -135,30 +135,34 @@ export default {
 
     },
     toDetails(activeName, item) {
-      if (activeName == 'post') {
-        this.$router.push({path: '/detail', query: {id: item.id}});
-      } else if (activeName == 'sold' || activeName == 'order') {
-        this.$router.push({path: '/order', query: {id: item.id}});
-      }
+      this.$router.push({path: '/details', query: {id: item.idle.id}});
     },
     handleClick(tab, event) {
       //null
     },
     getMyIdle() {
-      console.log('用户', this.user)
+      const loading = this.$loading({
+        lock: true,
+        text: '加载数据中',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0)'
+      });
+      //console.log('用户', this.user)
       for (let index = 0; index <= 1; index++) {
         this.$api.getMyIdle({
           id: this.user.id,
           status: index
         }).then(res => {
-          console.log(res);
+          //console.log(res);
           if (res.status_code === 1) {
             this.idleList[index] = res.data;
           }
-          console.log('已经找到idle')
+          //console.log('已经找到idle');
         })
       }
-      console.log(this.idleList);
+      this.activeName = '1';
+      loading.close();
+      //console.log(this.idleList);
 
     },
   }

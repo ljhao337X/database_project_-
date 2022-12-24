@@ -64,9 +64,7 @@ export default {
       this.$router.push('newpost')
     },
     toProfile() {
-      if ('/profile' !== this.$route.path) {
-        this.$router.push({path: '/myProfile'});
-      }
+      this.$router.push({path: '/myProfile'});
     },
     loginOut() {
       this.$store.commit('set_is_login', false);

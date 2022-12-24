@@ -113,8 +113,8 @@ export default {
       //使用index访问类别
       //todo
       //index为1的话会出现错误
-      option_index: [1, 2, 3, 4, 5, 6, 7, 8],
-      options: ['户外', '数码', '家具', '图书', '服装', '饰品', '化妆品', '家居'],
+      option_index: [1, 2, 3, 4, 5, 6, 7],
+      options: ['户外', '数码', '居家', '图书', '服装', '饰品', '化妆品'],
       imgDialogVisible: false,
       dialogImageUrl: '',
       dialogVisible: false,

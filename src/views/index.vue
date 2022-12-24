@@ -5,12 +5,16 @@
       <div style="min-height: 85vh;">
         <!-- 这是上层显示的一些分类-->
         <el-tabs v-model="labelName" type="card" @tab-click="handleClick">
+<!--          options: ['户外', '数码', '居家', '图书', '服装', '饰品', '化妆品'],-->
           <el-tab-pane label="全部" name="0"></el-tab-pane>
-          <el-tab-pane label="数码" name="1"></el-tab-pane>
-          <el-tab-pane label="家电" name="2"></el-tab-pane>
-          <el-tab-pane label="户外" name="3"></el-tab-pane>
+          <el-tab-pane label="户外" name="1"></el-tab-pane>
+          <el-tab-pane label="数码" name="2"></el-tab-pane>
+          <el-tab-pane label="居家" name="3"></el-tab-pane>
           <el-tab-pane label="图书" name="4"></el-tab-pane>
-          <el-tab-pane label="其他" name="5"></el-tab-pane>
+          <el-tab-pane label="服装" name="5"></el-tab-pane>
+          <el-tab-pane label="饰品" name="6"></el-tab-pane>
+          <el-tab-pane label="化妆品" name="7"></el-tab-pane>
+
         </el-tabs>
         <div style="margin: 0 20px;">
           <el-row :gutter="30">

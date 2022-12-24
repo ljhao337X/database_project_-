@@ -11,17 +11,20 @@
             <div class="details-header-nickname">{{ user.nickname }}</div>
           </div>
         </div>
-        <div class="details-header-buy" :style="'width:'+(isMaster?'150px;':'280px;')">
-          <div style="color: red;font-size: 18px;font-weight: 600;">￥{{ idle.price }}</div>
-          <div v-if="!isMaster&&(idle.status==='2'||idle.status==='4')" style="color: red;font-size: 16px;">
+        <div class="details-header-buy" :style="'width:310px;'">
+          <div style="color: red;font-size: 18px;font-weight: 600;margin:10px;">￥{{ idle.price }}</div>
+          <!--  所有人都可以查看订单的状态 -->
+          <div v-if="(idle.status==='2'||idle.status==='4')" style="margin:10px;color: red;font-size: 16px;">
             闲置已下架或删除
           </div>
-          <div v-if="!isMaster&&(idle.status==='1'||idle.status==='3')" style="color: red;font-size: 16px;">
+          <div v-if="(idle.status==='1'||idle.status==='3')" style="margin:10px;color: red;font-size: 16px;">
             闲置正在交易或已经出售
           </div>
           <el-button v-if="!isMaster&&idle.status==='0'" type="danger" plain @click="buyButton(idle)">立即购买
           </el-button>
-          <el-button v-if="isBuyer" type="danger" plain @click="buyButton(idle)">查看订单</el-button>
+          <!--  所有人都可以查看正在正在进行中、已经完成订单 -->
+          <el-button v-if="(idle.status==='1'||idle.status==='3')" type="primary" plain @click="toOrder(idle)">查看订单</el-button>
+          <!--  卖家都可以下架售卖中的商品 -->
           <el-button v-if="isMaster&&idle.status==='0'" type="danger" @click="changeStatus(idle,2)" plain>下架
           </el-button>
         </div>
@@ -77,7 +80,8 @@ export default {
       visitor: {
         id: ''
       },
-      isBuyer: false
+      isBuyer: false,
+      orderId: ''
     }
   },
   created() {
@@ -112,6 +116,7 @@ export default {
         idleId: this.idle.id
       }).then(res => {
         if (res.status_code == 1) {
+          console.log('isBuyer')
           this.isBuyer = true;
         }
       }).catch(e => {
@@ -121,12 +126,12 @@ export default {
   methods: {
     buyButton(idle) {
       this.$api.addOrder({
-        idleId: idle.id,
+        idleId: this.idle.id,
         buyerId: this.visitor.id
       }).then(res => {
         console.log(res);
         if (res.status_code === 1) {
-          this.$router.push({path: '/order', query: {id: res.data.orderId}});
+          this.$router.push({path: '/order', query: {id: res.data.id}});
         } else {
           this.$message.error(res.message)
         }
@@ -149,6 +154,20 @@ export default {
     },
     toProfile() {
       this.$router.push({path: '/profile', query: {userId: this.user.id}});
+    },
+    toOrder(idle) {
+      console.log('idle', idle)
+      this.$api.getOrderByIdle({
+        idleId: idle.id,
+      }).then(res => {
+        //console.log(res);
+        if (res.status_code === 1) {
+          //console.log(res);
+          this.$router.push({path: '/order', query: {id: res.data}});
+        } else {
+          this.$message.error(res.message)
+        }
+      });
     }
   }
 }

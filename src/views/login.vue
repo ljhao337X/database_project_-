@@ -70,7 +70,9 @@ export default {
               console.log(res.data)
               this.$store.commit('set_admin_is_login', true);
               this.$store.commit('set_admin', res.data);
-
+              //管理原也应当作为普通用户登录，有普通用户的权限
+              this.$store.commit('set_is_login', true);
+              this.$store.commit('set_user', res.data);
             } else {
               // 一般用户，跳转到index界面
               console.log('成功登录');

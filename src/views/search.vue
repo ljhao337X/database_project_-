@@ -1,6 +1,6 @@
 <template>
   <div>
-    <app-head :searchInput="searchValue"></app-head>
+    <app-head></app-head>
     <app-body>
       <div style="min-height: 85vh;">
         <div style="margin: 0 20px;padding-top: 20px;">
@@ -73,7 +73,6 @@ export default {
       idleList: [{
         idle: {
           id: 0,
-          imgUrl: null,
           name: 'second-hand phone',
           price: '1100',
           details: 'this is amazing',
@@ -89,14 +88,22 @@ export default {
       totalItem: 8
     }
   },
+  watch:{
+    // 监听路由发生改变
+    '$route':{
+      handler(newVal) {
+        this.$router.go(0);
+      }
+    }
+  },
   created() {
     let searchStr = this.$route.query.str;
-    this.$api.findIdleByLabel({
+    this.$api.searchIdle({
       str: searchStr,
       page: this.currentPage,
       num: 8
     }).then(res => {
-      //console.log(res);
+      console.log(res);
       this.idleList = res.data;
       this.totalItem = res.data.count;
       //console.log(this.totalItem);

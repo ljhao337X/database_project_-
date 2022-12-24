@@ -52,6 +52,9 @@ const routes = [
     name: 'newpost',
     component: function () {
       return import('../views/newpost.vue')
+    },
+    meta: {
+      requireAuth: true
     }
   },
   {
@@ -76,6 +79,9 @@ const routes = [
     name: 'Order',
     component: function (){
       return import('../views/order.vue')
+    },
+    meta: {
+      requireAuth: true
     }
   },
   {
@@ -97,6 +103,9 @@ const routes = [
     name: 'search',
     component: function (){
       return import('../views/search.vue')
+    },
+    meta: {
+      requireAuth: true
     }
   }
 

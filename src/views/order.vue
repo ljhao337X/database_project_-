@@ -3,47 +3,57 @@
     <app-head></app-head>
     <app-body>
       <div class="order-page">
-        <div class="idle-info-container" @click="toDetails(order.idle.id)">
+        <div class="idle-info-container" @click="toDetails(idle.id)">
           <el-image
               style="width: 150px; height: 150px;"
-              :src="order.idle.picture1"
+              :src="idle.picture1"
               fit="cover"></el-image>
-          <div class="order-info-title">{{ order.buyer.id == visitor.id ? '买到的' : '卖出的' }}：{{
-              order.idle.name
+          <div class="order-info-title">{{ order.buyer_id == visitor.id ? '买到的' : '卖出的' }}：{{
+              idle.name
             }}
           </div>
-          <div class="idle-info-price">￥{{ order.idle.price }}</div>
+          <div class="idle-info-price">￥{{ idle.price }}</div>
 
         </div>
         <div class="order-info-container">
-          <div class="order-info-title">订单信息（{{ orderStatus[order.status] }}）：</div>
+          <div class="order-info-title">订单信息（{{ order.status }}）：</div>
+          <div class="order-info-item">卖家：{{
+              order.seller_id
+            }}
+          </div>
+          <div class="order-info-item">买家：{{
+              order.buyer_id
+            }}
+          </div>
           <div class="order-info-item">编号：{{ order.id }}</div>
-          <div class="order-info-item">支付状态：{{ order.paymentStatus === 0 ? '未支付' : '已支付' }}</div>
-          <div class="order-info-item">创建时间：{{
-              order.createTime.substring(0, 10) + ' ' +
-              order.createTime.substring(11, 19)
+          <div class="order-info-item">买家评论：{{
+              order.comment
             }}
           </div>
-          <div class="order-info-item">支付时间：{{
-              order.paymentTime ? order.paymentTime.substring(0, 10) + ' ' +
-                  order.paymentTime.substring(11, 19) : ''
-            }}
-          </div>
-        </div>
-        <div class="menu">
-          <el-button v-if="visitor.id==order.buyer.id&&order.status===0" type="danger" plain
-                     @click="changeOrderStatus(3,order)">取消订单
-          </el-button>
-          <el-button v-if="visitor.id==order.buyer.id&&order.status===0" type="primary" plain
-                     @click="changeOrderStatus(2,order)">立即支付
-          </el-button>
-          <el-button v-if="visitor.id==order.user.id&&order.status===1" type="primary" plain
-                     @click="changeOrderStatus(1,order)">确认交付
-          </el-button>
+          <el-input class="release-idle-detiles-text"
+                    v-if="visitor.id===order.buyer_id&&order.status==='待付款'"
+                    type="textarea"
+                    :autosize="{ minRows: 2, maxRows: 4}"
+                    placeholder="卖家态度怎么样？加上你的评论吧！"
+                    v-model="comment"
+                    maxlength="1500"
+                    show-word-limit>
+          </el-input>
         </div>
       </div>
-      <app-foot></app-foot>
-    </app-body>
+      <div class="menu">
+        <el-button v-if="visitor.id===order.buyer_id&&order.status==='待确认'" type="danger" plain
+                   @click="changeOrderStatus('已取消',order)">取消订单
+        </el-button>
+        <el-button v-else-if="visitor.id===order.buyer_id&&order.status==='待付款'" type="primary" plain
+                   @click="changeOrderStatus('已完成',order)">立即支付
+        </el-button>
+        <el-button v-else-if="(visitor.id===order.seller_id)&&(order.status==='待确认')" type="primary" plain
+                   @click="changeOrderStatus('待付款',order)">确认交付
+        </el-button>
+      </div>
+  <app-foot></app-foot>
+  </app-body>
   </div>
 </template>
 
@@ -61,32 +71,33 @@ export default {
   },
   data() {
     return {
-      orderStatus: ['待付款', '待发货', '待收货', '已完成', '已取消'],
+      //待确认，待付款，已完成，已取消
+      orderStatus: ['待确认', '待付款', '已完成', '已取消'],
+      idle: {
+        id: '1212',
+        name: 'second-hand phone',
+        picture1: '',
+        price: 1212
+      },
       order: {
         id: '1212121',
-        paymentStatus: 1,
-        paymentTime: '121',
+        comment: '',
         createTime: '12.12.112',
-        status: 1,
-        idle: {
-          id: '1212',
-          name: 'second-hand phone',
-          picture1: '',
-          price: 1212
-        },
-        user: {id: '1111'},
-        buyer: {
-          id: '1111'
-        }
+        status: '',
+        buyer_id: '',
+        seller_id: ''
       },
       visitor: {
         id: ''
-      }
+      },
+      comment: ''
     }
   },
   created() {
     if (this.$store.state.is_login) {
       this.visitor = this.$store.state.user;
+      console.log('visitor', this.visitor)
+      //console.log(this.$route.query);
       this.getOrderInfo(this.$route.query.id);
     } else {
       this.$router.push('login');
@@ -94,9 +105,12 @@ export default {
   },
   methods: {
     getOrderInfo(orderId) {
+      //console.log(orderId);
       this.$api.getOrder({id: orderId}).then(res => {
+        console.log(res);
         if (res.status_code == 1) {
-          this.order = res.data;
+          this.order = res.data.order;
+          this.idle = res.data.idle;
         }
       })
     },
@@ -104,12 +118,42 @@ export default {
       this.$router.push({path: '\details', query: {id: id}});
     },
     changeOrderStatus(to, order) {
-      this.$api.updateOrder({id: order.id, to: to}).then(res => {
+      this.$api.updateOrderStatus({id: order.id, status: to}).then(res => {
         if (res.status_code == 1) {
-          if (to == 1) {
+          if (to == '待付款') {
             this.$message.info('交付成功，等待付款');
-          } else if (to == 2) {
-            this.$message.info('付款成功，交易完成');
+            this.$router.go(0);
+          } else if (to == '已完成') {
+            //添加评论
+            this.$api.updateOrderComment({
+              id: order.id,
+              comment: this.comment
+            }).then(res => {
+              if (res.status_code == 1) {
+                //更改商品状态
+                this.$api.updateIdle({
+                  id: this.idle.id,
+                  idleStatus: 1//已出售
+                }).then(res => {
+                  if (res.status_code == 1) {
+                    this.$message.info('付款成功，交易完成');
+                    this.$router.go(0);
+                  }
+                })
+              }
+            })
+
+          } else if (to == '已取消') {
+            //恢复商品状态
+            this.$api.updateIdle({
+              id: this.idle.id,
+              idleStatus: 0 //恢复未出售状态
+            }).then(res => {
+              if (res.status_code == 1) {
+                this.$message.info('订单已取消');
+                this.$router.push('index');
+              }
+            })
           }
         } else {
           if (to == 1) {

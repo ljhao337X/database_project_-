@@ -64,7 +64,7 @@
           <el-tab-pane label="我发布的" name="0"></el-tab-pane>
           <el-tab-pane label="我卖出的" name="1"></el-tab-pane>
           <el-tab-pane label="已下架的" name="2"></el-tab-pane>
-          <el-tab-pane label="正在进行" name="3"></el-tab-pane>
+          <el-tab-pane label="我的订单" name="3"></el-tab-pane>
         </el-tabs>
         <div class="idle-container-list">
           <div v-for="item in idleList[activeName]" class="idle-container-list-item">
@@ -87,15 +87,11 @@
                 </div>
                 <div class="idle-item-foot">
                   <div class="idle-prive">￥{{ item.idle.price }}
-                    {{ (activeName === '0') ? '待出售' : (activeName === '1') ? '已出售' : '已下架' }}
+                    {{idleStatus[activeName]}}
                   </div>
                   <el-button v-if="activeName==='0'" type="danger" size="mini" slot="reference"
                              plain @click.stop="handle(activeName,item,index)">
                     下架
-                  </el-button>
-                  <el-button v-else-if="activeName==='1'" type="primary" size="mini" slot="reference"
-                             plain @click.stop="handle(activeName,item,index)">
-                    查看订单
                   </el-button>
                   <el-button v-else-if="activeName==='4'" type="success" size="mini" slot="reference"
                              :disabled="false">恢复上架
@@ -131,6 +127,7 @@ export default {
       statusName: ['我发布的', '我卖出的', '已下架的', '正在进行'],
       statusToInt: {'我发布的': 0, '我卖出的': 1, '已下架的': 2, '正在进行': 3},
       handleName: ['下架', '删除', '取消收藏', '', ''],
+      idleStatus: ['出售中', '已出售', '已下架', '进行中'],
       orderStatus: ['待付款', '待发货', '待收货', '已完成', '已取消'],
 
       editUserInfoDialogVisible: false,
@@ -153,20 +150,21 @@ export default {
       },
       idleList: [[{
         idle: {
-          id: '121',
+          id: '',
           picture1: '',
-          name: 'second-hand phone',
-          price: '1100',
-          details: 'this is amazing',
+          name: '',
+          price: '',
+          details: '',
         },
         user: {
-          avatar: 'https://database-project.oss-cn-zhangjiakou.aliyuncs.com/2.jpg',
-          nickname: 'danny',
+          avatar: '',
+          nickname: '',
         }
       }], [], [], []]
     };
   },
   created() {
+
     if (this.$store.state.is_login) {
       //console.log(this.$store.state);
       let userId = this.$store.state.user.id;
@@ -174,7 +172,7 @@ export default {
           .then(res => {
             this.user = res.data;
             console.log('已经登录');
-            console.log(this.user)
+            //console.log(this.user)
             this.user_new.nickname = this.user.nickname;
             this.getMyIdle();
           })
@@ -278,11 +276,7 @@ export default {
       return isJPG && isLt2M;
     },
     toDetails(activeName, item) {
-      if (activeName == 'post') {
-        this.$router.push({path: '/detail', query: {id: item.id}});
-      } else if (activeName == 'sold' || activeName == 'order') {
-        this.$router.push({path: '/order', query: {id: item.id}});
-      }
+      this.$router.push({path: '/details', query: {id: item.idle.id}});
     },
     handleClick(tab, event) {
       //null
@@ -290,7 +284,14 @@ export default {
     getMyIdle() {
       //console.log('准备找idle');
       //console.log(this.user);
-      for (let index = 0; index <= 2; index++) {
+      const loading = this.$loading({
+        lock: true,
+        text: '加载数据中',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0)'
+      });
+      loading.lock = false;
+      for (let index = 0; index <= 3; index++) {
         this.$api.getMyIdle({
           id: this.user.id,
           status: index
@@ -299,10 +300,12 @@ export default {
           if (res.status_code === 1) {
             this.idleList[index] = res.data;
           }
-          console.log('已经找到idle')
+          console.log('已经找到idle');
         })
       }
-      console.log(this.idleList);
+      this.activeName = '1';
+      loading.close();
+      //console.log(this.idleList);
 
     },
   }

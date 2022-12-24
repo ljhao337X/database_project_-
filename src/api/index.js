@@ -108,16 +108,30 @@ const api = {
             params: query
         })
     },
-    updateOrder(query) {
+    updateOrderStatus(query) {
         return request({
-            url: '/order/update',
+            url: '/order/updateStatus',
             method: 'get',
             params: query
         })
     },
     getOrder(query) {
         return request({
-            url: '/order/update',
+            url: '/order/get',
+            method: 'get',
+            params: query
+        })
+    },
+    getOrderByIdle(query) {
+        return request({
+            url: '/order/findByIdleId',
+            method: 'get',
+            params: query
+        })
+    },
+    updateOrderComment(query){
+        return request({
+            url: '/order/updateComment',
             method: 'get',
             params: query
         })
