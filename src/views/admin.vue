@@ -93,6 +93,7 @@ export default {
       // 登出的函数
       this.$store.commit('set_admin_is_login', false);
       this.$store.commit('set_admin_nickname', "");
+      this.$store.commit('admin_logout');
       // 如果登出，会跳转到index界面
       this.$router.push({path: '/index'});
     },

@@ -34,6 +34,9 @@ export default new Vuex.Store({
         },
         logout(state) {
             state.is_login = false;
+            state.is_admin_login = false;
+            state.user = null;
+            state.admin = null;
         },
         // 管理员使用
         set_admin_nickname(state, token) {
@@ -46,7 +49,10 @@ export default new Vuex.Store({
             state.admin = admin;
         },
         admin_logout(state) {
+            state.is_login = false;
             state.is_admin_login = false;
+            state.user = null;
+            state.admin = null;
         }
     },
     actions: {},

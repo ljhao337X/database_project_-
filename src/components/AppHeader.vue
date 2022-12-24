@@ -9,12 +9,15 @@
       </el-input>
     </div>
     <el-button type="success" @click="postAnItem"><i class="el-icon-plus"></i>发布闲置</el-button>
+
     <router-link v-if="!isLogin" class="user-name-text" to="/login">登录</router-link>
     <el-dropdown v-else trigger="click">
-      <div style="cursor:pointer;display: flex;align-items: center;">
-        <div style="font-size: 16px;color: #409EFF;padding-right: 5px;">{{ nickname }}
+      <div style="display: flex; align-items: center;
+      border-left-style:solid; border-right-style: solid; border-color:#409EFF;
+      ">
+        <div style="font-style: oblique; font-size: 16px;color: #303133;padding: 15px;">{{ nickname }}
         </div>
-        <div class="block">
+        <div class="block" style="padding: 10px">
           <el-avatar :size="40" :src="avatar"></el-avatar>
         </div>
       </div>
@@ -67,7 +70,7 @@ export default {
       this.$router.push({path: '/myProfile'});
     },
     loginOut() {
-      this.$store.commit('set_is_login', false);
+      this.$store.commit('logout');
       this.$router.go(0);
     }
   }

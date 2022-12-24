@@ -30,6 +30,12 @@ router.beforeEach((to, from, next) => {
             name: 'index',
         })
     }
+    if (!store.state.is_admin_login && to.meta.requireAdmin){
+        this.$message.error('需要管理员身份');
+        next({
+            name: 'login',
+        })
+    }
 
     next()
 })

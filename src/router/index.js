@@ -89,6 +89,9 @@ const routes = [
     name: 'admin',
     component: function (){
       return import('../views/admin.vue')
+    },
+    meta: {
+      requireAdmin: true
     }
   },
   {
