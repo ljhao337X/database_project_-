@@ -30,18 +30,28 @@
           </div>
           <div class="order-info-item">编号：{{ order.id }}</div>
           <div class="order-info-item">买家评论：{{
-              order.comment
+              order.comment? order.comment:'买家还未留下评论'
             }}
           </div>
-          <el-input class="release-idle-detiles-text"
-                    v-if="visitor.id===order.buyer_id&&order.status==='待付款'"
-                    type="textarea"
-                    :autosize="{ minRows: 2, maxRows: 4}"
-                    placeholder="卖家态度怎么样？加上你的评论吧！"
-                    v-model="comment"
-                    maxlength="1500"
-                    show-word-limit>
-          </el-input>
+          <div v-if="visitor.id===order.buyer_id&&order.status==='待付款'">
+            <p>添加个评语吧：</p>
+            <el-input class="release-idle-detiles-text"
+                      type="textarea"
+                      :autosize="{ minRows: 2, maxRows: 4}"
+                      placeholder="卖家态度怎么样？加上你的评论吧！"
+                      v-model="comment"
+                      maxlength="1500"
+                      show-word-limit>
+            </el-input>
+            <p>为卖家的态度和商品打个分吧：</p>
+            <el-rate
+                style="padding: 10px;"
+                v-model="new_credit"
+                :texts="texts"
+                show-text>
+            </el-rate>
+          </div>
+
         </div>
       </div>
       <div class="menu">
@@ -76,6 +86,8 @@ export default {
     return {
       //待确认，待付款，已完成，已取消
       orderStatus: ['待确认', '待付款', '已完成', '已取消'],
+      new_credit: 1,
+      texts: ['极差','失望', '一般', '满意', '非常棒'],
       idle: {
         id: '1212',
         name: 'second-hand phone',
@@ -86,7 +98,7 @@ export default {
         id: '1212121',
         comment: '',
         createTime: '12.12.112',
-        status: '',
+        status: '待付款',
         buyer_id: '',
         seller_id: ''
       },
@@ -130,10 +142,12 @@ export default {
             //添加评论
             this.$api.updateOrderComment({
               id: order.id,
-              comment: this.comment
+              comment: this.comment,
+              credit: this.new_credit
             }).then(res => {
               if (res.status_code == 1) {
                 //更改商品状态
+                console.log(this.new_credit);
                 this.$api.updateIdle({
                   id: this.idle.id,
                   idleStatus: 1//已出售

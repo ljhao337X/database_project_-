@@ -23,6 +23,5 @@ export default {
   width: 1000px;
   background:rgba(233, 233, 235, 0.9);
   min-height: 90vh;
-  border-radius: 15px;
 }
 </style>

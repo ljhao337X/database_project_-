@@ -3,7 +3,7 @@
     <app-head></app-head>
     <app-body>
       <div class="release-idle-container">
-        <el-card class="box-card">
+        <el-card class="box-card" style="border-radius: 10px;">
           <div>
             <div class="release-idle-container-title">发布闲置</div>
             <el-form :label-position="'right'" label-width="120px">

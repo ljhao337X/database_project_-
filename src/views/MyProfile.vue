@@ -17,6 +17,14 @@
           </el-upload>
           <div class="user-info-details-text">
             <div class="user-info-details-text-nickname">{{ user.nickname }}</div>
+            <el-rate
+                style="padding: 10px;"
+                v-model="user.credit"
+                disabled
+                show-score
+                text-color="#ff9900"
+                score-template="{value}">
+            </el-rate>
             <div class="user-info-details-text-edit">
               <el-button type="primary" @click="editUserInfoDialogVisible = true">编辑个人信息</el-button>
             </div>
@@ -57,6 +65,7 @@
               </div>
             </el-dialog>
           </div>
+
         </div>
       </div>
       <div class="idle-container">
@@ -140,9 +149,11 @@ export default {
       selectedOptions: [],//存放默认值
       user: {
         id: '',
-        nickname: '',
+        nickname: 'dd',
         avatar: '',
-        password: ''
+        password: '',
+        credit: 3.7,
+        sellCount: 1,
       },
       user_new: {
         nickname: '',

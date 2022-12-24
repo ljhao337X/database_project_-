@@ -18,6 +18,14 @@
           <div class="user-info-details-text">
             <div class="user-info-details-text-nickname">{{ user.nickname }}</div>
           </div>
+          <el-rate
+              style="padding: 10px;"
+              v-model="user.credit"
+              disabled
+              show-score
+              text-color="#ff9900"
+              score-template="{value}">
+          </el-rate>
         </div>
       </div>
       <div class="idle-container">
@@ -89,8 +97,10 @@ export default {
       selectedOptions: [],//存放默认值
       user: {
         id: '',
-        nickname: '',
-        avatar: ''
+        nickname: 'ff',
+        avatar: '',
+        credit: 3.8,
+        sellCount: 1
       },
       idleList: [[{
         idle: {
