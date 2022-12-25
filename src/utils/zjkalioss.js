@@ -2,10 +2,10 @@
 let OSS = require('ali-oss');
 
 let client = new OSS({
-    accessKeyId: 'LTAI5t6ZynHAm5cym7NPRMhB',
-    accessKeySecret: 'pI6KHtIRcUpgYd0b9hqfY26RlDHQA5',
-    bucket: 'database-project',
-    region: 'oss-cn-zhangjiakou'
+    accessKeyId: 'yourkey',
+    accessKeySecret: 'yourkey',
+    bucket: 'haha',
+    region: 'haha'
 });
 
 export async function put (filePath, file) {
