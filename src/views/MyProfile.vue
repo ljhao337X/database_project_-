@@ -201,6 +201,7 @@ export default {
         }).then(res => {
           this.$store.commit("set_nickname", this.user_new.nickname);
           this.user.nickname = this.user_new.nickname;
+          this.$router.go(0);
         })
       }
       if (this.userPasswordEdit) {
@@ -315,7 +316,7 @@ export default {
           console.log('已经找到idle');
         })
       }
-      this.activeName = '1';
+      this.activeName = '2';
       loading.close();
       //console.log(this.idleList);
 

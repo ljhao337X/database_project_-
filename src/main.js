@@ -24,20 +24,22 @@ Vue.prototype.$sta = sta;
 
 router.beforeEach((to, from, next) => {
 
-    // 若用户未登录且访问的页面需要登录，则跳转至登录页面
+    // 若用户未登录且访问的页面需要登录，则跳转至主页
     if (!store.state.is_login && to.meta.requireAuth) {
         next({
             name: 'index',
         })
     }
-    if (!store.state.is_admin_login && to.meta.requireAdmin){
+    // 若不是管理员且访问管理员界面，则跳转至登录页面
+    else if (!store.state.is_admin_login && to.meta.requireAdmin){
         this.$message.error('需要管理员身份');
         next({
             name: 'login',
         })
     }
-
-    next()
+    else {
+        next()
+    }
 })
 
 new Vue({

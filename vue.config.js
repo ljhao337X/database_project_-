@@ -4,7 +4,7 @@ module.exports = {
         open: true,
         proxy: {
             '/api': {
-                target: 'http://qyyksg.natappfree.cc', // 请求接口地址
+                target: 'http://n2pncs.natappfree.cc', // 请求接口地址
                 changeOrigin: true,
                 pathRewrite: {
                     '^/api': ''

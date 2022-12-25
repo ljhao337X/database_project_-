@@ -7,13 +7,14 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
         token: '',
+        // 普通用户信息
         is_login: false,
         user: {
             id: '',
             nickname: '',
             avatar: ''
         },
-        // 为了常驻
+        // 管理员信息
         is_admin_login: false,
         admin: {
             id: '',

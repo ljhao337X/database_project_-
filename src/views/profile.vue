@@ -112,7 +112,7 @@ export default {
         },
         user: {
           avatar: '',
-          nickname: 'danny',
+          nickname: '',
         }
       }], [],],
 
@@ -131,8 +131,9 @@ export default {
           this.user = res.data;
           console.log('找到用户');
           console.log(res.data);
+          this.activeName = '2';
           this.getMyIdle();
-          this.activeName = '0';
+
         }
       })
     } else {
